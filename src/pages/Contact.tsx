@@ -201,9 +201,9 @@ const Contact = () => {
   return (
     <div className="contact-page fade-in">
       <div className="section-header text-center mb-4">
-        <h1 className="section-title" style={{ fontSize: '2.25rem', marginBottom: '0.75rem' }}>Get in Touch</h1>
+        <h1 className="section-title" style={{ fontSize: '2.25rem', marginBottom: '0.75rem' }}>Practice Consultation Request</h1>
         <p className="section-subtitle" style={{ maxWidth: '640px', margin: '0 auto', fontSize: '1.125rem', lineHeight: '1.6', color: '#f1f5f9' }}>
-          Please fill out the questionnaire below so we can understand your needs before connecting.
+          Complete the practice assessment below to help us tailor an operational support structure for your clinic.
         </p>
       </div>
 
@@ -224,10 +224,10 @@ const Contact = () => {
         <AlertTriangle size={24} style={{ flexShrink: 0, marginTop: '2px', color: '#b91c1c' }} />
         <div>
           <strong style={{ display: 'block', marginBottom: '0.35rem', fontSize: '1.05rem', color: '#991b1b' }}>
-            Strict Data Privacy Restriction
+            Confidentiality & Privacy Notice
           </strong>
           <p style={{ margin: 0, fontSize: '1rem', lineHeight: '1.5', color: '#7f1d1d' }}>
-            Do not submit any live patient health information or medical records through this form. This system is strictly for business inquiries.
+            Do not submit protected health information (PHI) or patient records through this form. This channel is reserved strictly for clinic business and operational inquiries.
           </p>
         </div>
       </div>
@@ -238,17 +238,17 @@ const Contact = () => {
             <div style={{ display: 'inline-flex', padding: '1.25rem', borderRadius: '50%', backgroundColor: '#dcfce7', color: '#166534', marginBottom: '1.5rem' }}>
               <CheckCircle size={52} />
             </div>
-            <h2 style={{ color: 'var(--color-primary-dark)', marginBottom: '1rem', fontSize: '1.75rem' }}>Inquiry Received!</h2>
+            <h2 style={{ color: 'var(--color-primary-dark)', marginBottom: '1rem', fontSize: '1.75rem' }}>Inquiry Registered</h2>
             <p style={{ color: 'var(--color-text-main)', maxWidth: '540px', margin: '0 auto 1.5rem auto', fontSize: '1.075rem', lineHeight: '1.6' }}>
-              Thank you, <strong>{submittedInquiry?.name}</strong>. Your inquiry has been securely stored in our system (Reference #{submittedInquiry?.id}). 
-              Our team will review your practice requirements and get in touch via email.
+              Thank you, <strong>{submittedInquiry?.name}</strong>. Your consultation request has been logged in our secure system (Reference #{submittedInquiry?.id}). 
+              Our practice coordinator will review your requirements and follow up via email.
             </p>
             {submittedInquiry?.schedule_meeting && submittedInquiry.schedule_meeting !== 'No' && (
               <div style={{ padding: '1.25rem', backgroundColor: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: '8px', marginBottom: '2rem', color: '#166534', fontSize: '1.05rem', lineHeight: '1.5', textAlign: 'left' }}>
-                <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>🗓️ Requested Discovery Meeting:</div>
+                <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Requested Consultation Time:</div>
                 <div style={{ color: '#14532d' }}>{submittedInquiry.schedule_meeting}</div>
                 <div style={{ fontSize: '0.95rem', color: '#15803d', marginTop: '0.5rem' }}>
-                  We will send an MS Teams calendar invitation to your email.
+                  A calendar invitation will be issued to your email address.
                 </div>
               </div>
             )}
@@ -397,7 +397,7 @@ const Contact = () => {
                       gap: '0.35rem'
                     }}
                   >
-                    ✓ Pre-selected from Services
+                    Pre-selected from Services
                   </span>
                 )}
               </div>
@@ -418,11 +418,11 @@ const Contact = () => {
                 }}
               >
                 <option value="" disabled>Select an option...</option>
-                <option value="Desk Work only">Desk Work only (Emails, scheduling, and calls)</option>
-                <option value="Desk Work + Data gathering">Desk Work + Data gathering</option>
-                <option value="Report preparation only">Report preparation only</option>
-                <option value="Contract Review">Contract Review (Plain-Language Risk Read)</option>
-                <option value="All Three">Desk Work + Data gathering + Report preparation</option>
+                <option value="Desk Work only">Frontdesk & Diary Management (Patient calls, scheduling, email)</option>
+                <option value="Desk Work + Data gathering">Frontdesk Management + Intake Documentation</option>
+                <option value="Report preparation only">Intake Documentation & Reporting Only</option>
+                <option value="Contract Review">Operational & Service Agreement Review</option>
+                <option value="All Three">Comprehensive Practice Support (All Services)</option>
               </select>
             </div>
 

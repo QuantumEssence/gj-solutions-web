@@ -441,13 +441,13 @@ const Admin = () => {
       <div className="admin-page fade-in" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '65vh' }}>
         <div className="card" style={{ maxWidth: '440px', width: '100%', padding: '2.5rem', textAlign: 'center', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}>
           <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#f0fdf4', border: '2px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: '#166534' }}>
-            <Lock size={28} />
+            <Lock size={26} />
           </div>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary-dark)', marginBottom: '0.5rem' }}>
-            🔒 Admin Portal Access
+            Practice Operations Portal
           </h2>
           <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.75rem', lineHeight: '1.5' }}>
-            Protected administrative area. Enter your staff passcode to view leads, client requests, and traffic analytics.
+            Administrative gateway for practice inquiries, client consultation triage, and operational traffic metrics.
           </p>
 
           {loginError && (
@@ -459,13 +459,13 @@ const Admin = () => {
           <form onSubmit={handleLogin}>
             <div style={{ marginBottom: '1.25rem', textAlign: 'left' }}>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#334155', marginBottom: '0.4rem' }}>
-                Admin Passcode
+                Staff Access Passcode
               </label>
               <input
                 type="password"
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter admin passcode..."
+                placeholder="Enter staff passcode..."
                 autoFocus
                 style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '1rem', outline: 'none' }}
               />
@@ -476,7 +476,7 @@ const Admin = () => {
               className="btn btn-primary"
               style={{ width: '100%', padding: '0.75rem', fontSize: '1rem', fontWeight: '600', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
             >
-              {isLoggingIn ? 'Authenticating...' : <><span>Sign In to Admin Portal</span> <ArrowRight size={16} /></>}
+              {isLoggingIn ? 'Authenticating...' : <><span>Authenticate Portal</span> <ArrowRight size={16} /></>}
             </button>
           </form>
         </div>
@@ -489,12 +489,12 @@ const Admin = () => {
       <div className="section-header mb-4" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <h1 className="section-title mb-1" style={{ margin: 0 }}>Admin Dashboard</h1>
+            <h1 className="section-title mb-1" style={{ margin: 0 }}>Practice Management Dashboard</h1>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', backgroundColor: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.2rem 0.6rem', borderRadius: '999px' }}>
-              <Database size={12} /> Live Supabase DB Connected
+              <Database size={12} /> Database Connected
             </span>
           </div>
-          <p style={{ color: '#e6f4f5', marginTop: '0.25rem' }}>Internal portal for live traffic, questionnaire submissions, and request management.</p>
+          <p style={{ color: '#e6f4f5', marginTop: '0.25rem' }}>Centralized management for consultation inquiries, clinic triage status, and practice traffic metrics.</p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
           <button 
@@ -579,12 +579,12 @@ const Admin = () => {
       {/* Analytics Overview */}
       <div className="card mb-4" style={{ padding: '1.5rem' }}>
         <h3 className="mb-3" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <BarChart3 size={20} className="text-primary-light" /> Traffic & Analytics Overview
+          <BarChart3 size={20} className="text-primary-light" /> Traffic & Practice Analytics
         </h3>
-        <div style={{ height: '140px', backgroundColor: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#64748b', padding: '1rem', textAlign: 'center' }}>
-          <div style={{ fontWeight: '500', color: 'var(--color-primary-dark)', marginBottom: '0.25rem' }}>Site Traffic Activity Feed</div>
-          <div style={{ fontSize: '0.85rem' }}>
-            Logging live page views to SQLite database • Total page impressions logged: <strong>{summary.totalViews}</strong>
+        <div style={{ height: '110px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#64748b', padding: '1rem', textAlign: 'center' }}>
+          <div style={{ fontWeight: '600', color: 'var(--color-primary-dark)', marginBottom: '0.25rem' }}>Practice Traffic Monitor</div>
+          <div style={{ fontSize: '0.875rem' }}>
+            Live tracking active • Total page impressions recorded: <strong>{summary.totalViews}</strong>
           </div>
         </div>
         <div className="grid mt-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
@@ -597,11 +597,11 @@ const Admin = () => {
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary-dark)' }}>{summary.totalSubmissions}</div>
           </div>
           <div style={{ padding: '1rem', backgroundColor: '#f1f5f9', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Discovery Calls</div>
+            <div style={{ fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Consultations Scheduled</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary-dark)' }}>{summary.discoveryCalls}</div>
           </div>
           <div style={{ padding: '1rem', backgroundColor: '#f1f5f9', borderRadius: '8px', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Trash Bin Items</div>
+            <div style={{ fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Archived Inquiries</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: (summary.trashedCount || 0) > 0 ? '#b45309' : '#64748b' }}>
               {summary.trashedCount ?? trashedInquiries.length}
             </div>
@@ -822,13 +822,13 @@ const Admin = () => {
           </div>
         )}
 
-        {/* Tab 2: Trash Bin View (Per Oct 5 Meeting Requirement) */}
+        {/* Tab 2: Archived Inquiries View */}
         {activeTab === 'trash' && (
           <div>
-            <div style={{ backgroundColor: '#fffbeb', border: '1px solid #fcd34d', color: '#92400e', padding: '0.85rem 1.25rem', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <RotateCcw size={18} style={{ flexShrink: 0 }} />
+            <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', color: '#334155', padding: '0.85rem 1.25rem', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <RotateCcw size={16} style={{ flexShrink: 0, color: '#0284c7' }} />
               <div>
-                <strong>Trash Bin Protection (Oct 5 Meeting Requirement):</strong> Inquiries deleted here are safeguarded against accidental loss and can be restored back to the live list at any time.
+                <strong>Archive Safeguard:</strong> Inquiries moved here remain safely accessible and can be restored to active status at any time.
               </div>
             </div>
 
@@ -840,7 +840,7 @@ const Admin = () => {
                     <th style={{ padding: '1rem 0.5rem' }}>Name / Email</th>
                     <th style={{ padding: '1rem 0.5rem' }}>SPMC?</th>
                     <th style={{ padding: '1rem 0.5rem' }}>Service Interest</th>
-                    <th style={{ padding: '1rem 0.5rem' }}>Deleted On</th>
+                    <th style={{ padding: '1rem 0.5rem' }}>Archived On</th>
                     <th style={{ padding: '1rem 0.5rem', textAlign: 'center' }}>Actions</th>
                   </tr>
                 </thead>
@@ -848,10 +848,9 @@ const Admin = () => {
                   {trashedInquiries.length === 0 ? (
                     <tr>
                       <td colSpan={6} style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748b' }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🗑️</div>
-                        <div style={{ fontWeight: '600', color: '#334155' }}>Trash Bin is Empty</div>
+                        <div style={{ fontWeight: '600', color: '#334155' }}>Archive is Empty</div>
                         <div style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.25rem' }}>
-                          No deleted inquiries currently stored. Accidental deletions will appear here for easy restoration.
+                          No archived inquiries currently stored. Removed items will appear here for audit and restoration.
                         </div>
                       </td>
                     </tr>
@@ -903,7 +902,7 @@ const Admin = () => {
                             <button
                               onClick={() => handlePermanentDelete(inquiry.id)}
                               disabled={isUpdatingId === inquiry.id}
-                              title="Delete permanently from SQLite database"
+                              title="Permanently remove record"
                               style={{
                                 backgroundColor: '#fef2f2',
                                 border: '1px solid #fecaca',
@@ -918,7 +917,7 @@ const Admin = () => {
                               }}
                             >
                               <Trash2 size={13} />
-                              <span>Delete Forever</span>
+                              <span>Delete Permanently</span>
                             </button>
                           </div>
                         </td>
@@ -931,12 +930,12 @@ const Admin = () => {
           </div>
         )}
 
-        <div className="mt-4 text-center" style={{ color: '#64748b', fontSize: '0.9rem', fontStyle: 'italic', padding: '1rem', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
-          * Compliance Reminder: During this beta testing phase, this dashboard evaluates layout and database structure. No live patient health info should be processed here.
+        <div className="mt-4 text-center" style={{ color: '#64748b', fontSize: '0.85rem', padding: '0.85rem', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+          Compliance Notice: System maintains strict separation between practice administration records and protected clinical health data.
         </div>
       </div>
 
-      {/* Settings Modal: Beta Data Management, Cleaning Mode & Deleting Mode */}
+      {/* Settings Modal: Practice Data Management & Archive Controls */}
       {isSettingsOpen && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.65)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
           <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', border: '1px solid #e2e8f0' }}>
@@ -946,8 +945,8 @@ const Admin = () => {
                   <Settings size={22} />
                 </div>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#0f172a' }}>Beta Database & Request Settings</h3>
-                  <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b' }}>Configure live data modes, safe cleaning, and database reset controls</p>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#0f172a' }}>Database & Data Management Controls</h3>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b' }}>Configure live data retention, archiving, and system reset controls</p>
                 </div>
               </div>
               <button 
@@ -959,16 +958,16 @@ const Admin = () => {
             </div>
 
             <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {/* Option 1: Soft Cleaning Mode */}
+              {/* Option 1: Soft Archive Cleaning Mode */}
               <div style={{ border: '1px solid #cbd5e1', borderRadius: '8px', padding: '1rem', backgroundColor: '#f8fafc' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#1e293b' }}>
                       <RotateCcw size={16} color="#0284c7" />
-                      <span>Option A: Cleaning Mode (Soft Cleanup)</span>
+                      <span>Archive Active Inquiries (Soft Clean)</span>
                     </div>
                     <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.4' }}>
-                      Moves all active inquiries into the Trash Bin without destroying data. Enables a clean inbox for new testers while retaining recovery options.
+                      Moves all active inquiries into the Archive without permanently removing records. Keeps the active inbox clear while preserving recovery options.
                     </p>
                   </div>
                   <button
@@ -976,7 +975,7 @@ const Admin = () => {
                     disabled={isCleaning}
                     style={{ whiteSpace: 'nowrap', backgroundColor: '#e0f2fe', color: '#0369a1', border: '1px solid #7dd3fc', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
                   >
-                    Clean Active Requests
+                    Archive Active
                   </button>
                 </div>
               </div>
@@ -987,10 +986,10 @@ const Admin = () => {
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#991b1b' }}>
                       <Trash2 size={16} color="#dc2626" />
-                      <span>Option B: Deleting Mode (Purge Trash Bin)</span>
+                      <span>Purge Archived Inquiries (Permanent)</span>
                     </div>
                     <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#7f1d1d', lineHeight: '1.4' }}>
-                      Permanently purges all items currently in the Trash Bin. Irreversible deletion of trashed beta submissions.
+                      Permanently removes all items stored in the Archive. This action cannot be reversed.
                     </p>
                   </div>
                   <button
@@ -998,21 +997,21 @@ const Admin = () => {
                     disabled={isCleaning}
                     style={{ whiteSpace: 'nowrap', backgroundColor: '#dc2626', color: '#ffffff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
                   >
-                    Empty Trash Bin
+                    Purge Archive
                   </button>
                 </div>
               </div>
 
-              {/* Option 3: Full Beta Reset */}
+              {/* Option 3: Full Reset */}
               <div style={{ border: '1px solid #fbcfe8', borderRadius: '8px', padding: '1rem', backgroundColor: '#fdf2f8' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#9d174d' }}>
                       <ShieldAlert size={16} color="#db2777" />
-                      <span>Option C: Reset Database for Beta Test</span>
+                      <span>Reset Inquiries Database</span>
                     </div>
                     <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#831843', lineHeight: '1.4' }}>
-                      Completely zeroes out all active and trashed inquiries in Supabase to start test trials with 0 records.
+                      Clears all active and archived inquiry records to start with an empty database.
                     </p>
                   </div>
                   <button
@@ -1020,7 +1019,7 @@ const Admin = () => {
                     disabled={isCleaning}
                     style={{ whiteSpace: 'nowrap', backgroundColor: '#be185d', color: '#ffffff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
                   >
-                    Wipe Inquiries (0)
+                    Clear Database
                   </button>
                 </div>
               </div>
@@ -1031,10 +1030,10 @@ const Admin = () => {
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#334155' }}>
                       <BarChart3 size={16} color="#64748b" />
-                      <span>Option D: Reset Traffic Analytics Counter</span>
+                      <span>Reset Traffic Metrics Counter</span>
                     </div>
                     <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.4' }}>
-                      Clear past page impressions so your beta testing traffic metrics start fresh from day 1.
+                      Resets recorded traffic page views to zero for new reporting cycles.
                     </p>
                   </div>
                   <button
@@ -1042,21 +1041,21 @@ const Admin = () => {
                     disabled={isCleaning}
                     style={{ whiteSpace: 'nowrap', backgroundColor: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
                   >
-                    Reset Page Views
+                    Reset Views
                   </button>
                 </div>
               </div>
 
-              {/* Option 5: Seed Beta Fixture Data */}
+              {/* Option 5: Seed Practice Demonstrations */}
               <div style={{ border: '1px dashed #10b981', borderRadius: '8px', padding: '1rem', backgroundColor: '#ecfdf5' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#047857' }}>
                       <Sparkles size={16} color="#10b981" />
-                      <span>Option E: Populate Clean Beta Fixtures</span>
+                      <span>Load Sample Practice Inquiries</span>
                     </div>
                     <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#065f46', lineHeight: '1.4' }}>
-                      Insert 3 realistic sample Australian Physiotherapy inquiries to preview dashboard charts and triage workflows.
+                      Inserts sample Australian clinic consultation inquiries to preview status workflows and analytics charts.
                     </p>
                   </div>
                   <button
@@ -1064,7 +1063,7 @@ const Admin = () => {
                     disabled={isCleaning}
                     style={{ whiteSpace: 'nowrap', backgroundColor: '#059669', color: '#ffffff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
                   >
-                    Seed Sample Leads
+                    Load Sample Data
                   </button>
                 </div>
               </div>
@@ -1093,8 +1092,8 @@ const Admin = () => {
                   <Bell size={22} />
                 </div>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#0f172a' }}>Email & Real-Time Notifications</h3>
-                  <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b' }}>Dispatch alerts, trigger client re-notifications, and inspect triage log history</p>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#0f172a' }}>Email & Dispatch Management</h3>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b' }}>Trigger client re-notifications and inspect transmission logs</p>
                 </div>
               </div>
               <button 
@@ -1108,15 +1107,15 @@ const Admin = () => {
             <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #86efac', borderRadius: '8px', padding: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#166534', fontWeight: 'bold', fontSize: '0.95rem' }}>
-                  <Mail size={16} /> Instant Re-Notification Feature Active
+                  <Mail size={16} /> Automated Re-Notification Active
                 </div>
                 <p style={{ margin: '0.4rem 0 0', fontSize: '0.85rem', color: '#14532d', lineHeight: '1.4' }}>
-                  You can now re-notify any client or clinic staff directly from the Active Requests table using the <strong>Re-notify</strong> button.
+                  Dispatch follow-up email notifications directly to client clinics using the <strong>Re-notify</strong> button in the Active Requests table.
                 </p>
               </div>
 
               <div>
-                <h4 style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', color: '#334155', fontWeight: '600' }}>Recent Notification Dispatches</h4>
+                <h4 style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', color: '#334155', fontWeight: '600' }}>Transmission Audit Log</h4>
                 <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
                     <thead style={{ backgroundColor: '#f8fafc', color: '#64748b', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
@@ -1148,13 +1147,13 @@ const Admin = () => {
               {/* Notification Strategy Recommendation Panel */}
               <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '1rem' }}>
                 <h4 style={{ margin: '0 0 0.4rem', fontSize: '0.9rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <Send size={15} color="var(--color-primary-dark)" /> Recommended Notification Architecture
+                  <Send size={15} color="var(--color-primary-dark)" /> Recommended Practice Communication Protocols
                 </h4>
                 <p style={{ margin: 0, fontSize: '0.82rem', color: '#475569', lineHeight: '1.45' }}>
-                  For Australian physiotherapy practices, the highest converting notification architecture consists of:
-                  <br /><strong>1. Instant Clinic Staff Alert (Email + SMS/Slack):</strong> Within 60 seconds of questionnaire submission to ensure rapid booking triage.
-                  <br /><strong>2. Client Confirmation & Questionnaire Copy:</strong> Sends the clinic owner an instant PDF/summary of their tailored VA blueprint.
-                  <br /><strong>3. Smart Follow-Up Re-Notification:</strong> Auto-triggers after 24 hours if the status remains "Pending Review".
+                  Standard communication pipeline for Australian physiotherapy clinics:
+                  <br /><strong>1. Prompt Staff Intake Alert:</strong> Automated email alert within minutes of form submission for rapid triage.
+                  <br /><strong>2. Client Confirmation & Scope Summary:</strong> Sends the practice director an immediate consultation confirmation with their requested service scope.
+                  <br /><strong>3. Follow-Up Re-Notification:</strong> Triggered if appointment booking remains unconfirmed after 24 hours.
                 </p>
               </div>
             </div>

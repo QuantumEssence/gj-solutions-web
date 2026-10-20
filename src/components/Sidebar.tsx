@@ -47,7 +47,7 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }: SidebarProps) => {
         <div className="sidebar-header">
           <div className="logo-placeholder-box">
             <span className="logo-text">{isCollapsed ? 'G&J' : 'G&J Solutions'}</span>
-            {!isCollapsed && <span className="logo-hint">[ Insert Logo Here ]</span>}
+            {!isCollapsed && <span className="logo-hint">Practice Support Specialists</span>}
           </div>
           {onToggleCollapse && (
             <button 
@@ -79,12 +79,12 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }: SidebarProps) => {
             <li className="admin-link-wrapper">
               <NavLink 
                 to="/admin" 
-                title="Admin Portal (PoC)"
+                title="Admin Portal"
                 className={({ isActive }) => isActive ? 'nav-link active admin-link' : 'nav-link admin-link'}
                 onClick={() => setIsOpen(false)}
               >
                 <span className="nav-icon"><Lock size={20} /></span>
-                <span className="nav-text admin-text">Admin Portal (PoC)</span>
+                <span className="nav-text admin-text">Admin Portal</span>
               </NavLink>
             </li>
           </ul>
