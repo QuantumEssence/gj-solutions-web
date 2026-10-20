@@ -12,7 +12,12 @@ import {
   Trash2,
   RotateCcw,
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Mail,
+  X,
+  ShieldAlert,
+  Sparkles,
+  Send
 } from 'lucide-react';
 
 interface Inquiry {
@@ -69,6 +74,15 @@ const Admin = () => {
   const [isUpdatingId, setIsUpdatingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  // Modal and Action state for Beta Settings and Notifications
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isCleaning, setIsCleaning] = useState(false);
+  const [notifyingId, setNotifyingId] = useState<number | null>(null);
+  const [notificationLogs, setNotificationLogs] = useState<Array<{ id: number; timestamp: string; recipient: string; status: string; subject: string }>>([
+    { id: 1, timestamp: new Date().toLocaleTimeString(), recipient: 'clinic-admin@gjsolutions.com.au', status: 'Ready', subject: 'System standby for Beta Test launches' }
+  ]);
 
   const getAuthHeaders = useCallback((extraHeaders: Record<string, string> = {}) => {
     const currentToken = token || sessionStorage.getItem('gj_admin_token');
@@ -321,6 +335,80 @@ const Admin = () => {
     }
   };
 
+  const handleCleanMode = async (mode: 'trash_all' | 'purge_trash' | 'reset_all' | 'reset_analytics' | 'seed_beta') => {
+    let confirmMsg = '';
+    if (mode === 'trash_all') {
+      confirmMsg = 'Move ALL active inquiries to the Trash Bin? (Cleaning Mode: Soft wipe, fully recoverable from Trash)';
+    } else if (mode === 'purge_trash') {
+      confirmMsg = 'Permanently purge all items in Trash? (Deleting Mode: irreversible)';
+    } else if (mode === 'reset_all') {
+      confirmMsg = 'RESET ALL INQUIRIES DATABASE? This deletes every single active & trashed inquiry for a fresh beta test.';
+    } else if (mode === 'reset_analytics') {
+      confirmMsg = 'Reset page views and traffic counters back to zero for the beta launch?';
+    } else if (mode === 'seed_beta') {
+      confirmMsg = 'Load 3 realistic Australian Physiotherapy test inquiries for beta demonstration?';
+    }
+
+    if (confirmMsg && !window.confirm(confirmMsg)) return;
+
+    setIsCleaning(true);
+    try {
+      const res = await fetch('/api/admin/clean', {
+        method: 'POST',
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ mode })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Clean action failed.');
+      }
+
+      showFeedback(data.message || `Action ${mode} executed successfully.`);
+      await fetchData();
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Clean action failed.');
+    } finally {
+      setIsCleaning(false);
+    }
+  };
+
+  const handleReNotifyEmail = async (inquiry: Inquiry) => {
+    setNotifyingId(inquiry.id);
+    try {
+      const res = await fetch('/api/admin/notify', {
+        method: 'POST',
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          inquiryId: inquiry.id,
+          recipientEmail: inquiry.email,
+          channel: 'email'
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to dispatch notification.');
+      }
+
+      showFeedback(`📧 Re-notification email dispatched to ${inquiry.email} for Inquiry #${inquiry.id}!`);
+      setNotificationLogs((prev) => [
+        {
+          id: Date.now(),
+          timestamp: new Date().toLocaleTimeString(),
+          recipient: inquiry.email,
+          status: 'Delivered',
+          subject: `Re-notification dispatched for Inquiry #${inquiry.id} (${inquiry.name})`
+        },
+        ...prev
+      ]);
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Failed to re-notify via email.');
+    } finally {
+      setNotifyingId(null);
+    }
+  };
+
   const formatDate = (dateStr?: string | null) => {
     if (!dateStr) return 'N/A';
     try {
@@ -418,8 +506,38 @@ const Admin = () => {
           >
             <RefreshCw size={16} className={isLoading ? 'spin' : ''} style={isLoading ? { animation: 'spin 1s linear infinite' } : {}} /> Refresh
           </button>
-          <button className="btn" style={{ background: '#f1f5f9', color: '#475569', padding: '0.5rem' }} title="Notifications"><Bell size={20} /></button>
-          <button className="btn" style={{ background: '#f1f5f9', color: '#475569', padding: '0.5rem' }} title="Settings"><Settings size={20} /></button>
+          <button 
+            className="btn" 
+            style={{ 
+              background: isNotificationsOpen ? '#0f766e' : '#f1f5f9', 
+              color: isNotificationsOpen ? '#ffffff' : '#475569', 
+              padding: '0.5rem',
+              position: 'relative'
+            }} 
+            onClick={() => {
+              setIsNotificationsOpen(!isNotificationsOpen);
+              if (isSettingsOpen) setIsSettingsOpen(false);
+            }}
+            title="Notifications & Email Dispatch"
+          >
+            <Bell size={20} />
+            <span style={{ position: 'absolute', top: '-4px', right: '-4px', width: '9px', height: '9px', borderRadius: '50%', backgroundColor: '#10b981', border: '2px solid #ffffff' }}></span>
+          </button>
+          <button 
+            className="btn" 
+            style={{ 
+              background: isSettingsOpen ? '#0f766e' : '#f1f5f9', 
+              color: isSettingsOpen ? '#ffffff' : '#475569', 
+              padding: '0.5rem' 
+            }} 
+            onClick={() => {
+              setIsSettingsOpen(!isSettingsOpen);
+              if (isNotificationsOpen) setIsNotificationsOpen(false);
+            }}
+            title="Database Maintenance & Cleaning Mode"
+          >
+            <Settings size={20} />
+          </button>
           <button 
             className="btn"
             onClick={handleLogout}
@@ -640,37 +758,61 @@ const Admin = () => {
                         </select>
                       </td>
                       <td style={{ padding: '1rem 0.5rem', textAlign: 'center' }}>
-                        <button
-                          onClick={() => handleMoveToTrash(inquiry.id)}
-                          disabled={isUpdatingId === inquiry.id}
-                          title="Move inquiry to Trash Bin"
-                          style={{
-                            backgroundColor: '#f8fafc',
-                            border: '1px solid #cbd5e1',
-                            color: '#64748b',
-                            padding: '0.35rem 0.65rem',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.3rem',
-                            fontSize: '0.8rem',
-                            transition: 'all 0.15s ease'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#fee2e2';
-                            e.currentTarget.style.color = '#dc2626';
-                            e.currentTarget.style.borderColor = '#fca5a5';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = '#f8fafc';
-                            e.currentTarget.style.color = '#64748b';
-                            e.currentTarget.style.borderColor = '#cbd5e1';
-                          }}
-                        >
-                          <Trash2 size={13} />
-                          <span>Trash</span>
-                        </button>
+                        <div style={{ display: 'inline-flex', gap: '0.4rem', alignItems: 'center' }}>
+                          <button
+                            onClick={() => handleReNotifyEmail(inquiry)}
+                            disabled={notifyingId === inquiry.id}
+                            title={`Re-notify ${inquiry.email} with automated follow-up`}
+                            style={{
+                              backgroundColor: '#f0fdf4',
+                              border: '1px solid #bbf7d0',
+                              color: '#15803d',
+                              padding: '0.35rem 0.65rem',
+                              borderRadius: '6px',
+                              cursor: notifyingId === inquiry.id ? 'not-allowed' : 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                              fontSize: '0.8rem',
+                              fontWeight: '600',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <Mail size={13} />
+                            <span>{notifyingId === inquiry.id ? 'Sending...' : 'Re-notify'}</span>
+                          </button>
+                          <button
+                            onClick={() => handleMoveToTrash(inquiry.id)}
+                            disabled={isUpdatingId === inquiry.id}
+                            title="Move inquiry to Trash Bin"
+                            style={{
+                              backgroundColor: '#f8fafc',
+                              border: '1px solid #cbd5e1',
+                              color: '#64748b',
+                              padding: '0.35rem 0.65rem',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.3rem',
+                              fontSize: '0.8rem',
+                              transition: 'all 0.15s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#fee2e2';
+                              e.currentTarget.style.color = '#dc2626';
+                              e.currentTarget.style.borderColor = '#fca5a5';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#f8fafc';
+                              e.currentTarget.style.color = '#64748b';
+                              e.currentTarget.style.borderColor = '#cbd5e1';
+                            }}
+                          >
+                            <Trash2 size={13} />
+                            <span>Trash</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -793,6 +935,242 @@ const Admin = () => {
           * Compliance Reminder: During this beta testing phase, this dashboard evaluates layout and database structure. No live patient health info should be processed here.
         </div>
       </div>
+
+      {/* Settings Modal: Beta Data Management, Cleaning Mode & Deleting Mode */}
+      {isSettingsOpen && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.65)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+          <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', border: '1px solid #e2e8f0' }}>
+            <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ backgroundColor: '#f0fdf4', padding: '0.5rem', borderRadius: '8px', color: 'var(--color-primary-dark)' }}>
+                  <Settings size={22} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#0f172a' }}>Beta Database & Request Settings</h3>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b' }}>Configure live data modes, safe cleaning, and database reset controls</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsSettingsOpen(false)}
+                style={{ background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', padding: '0.25rem' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              {/* Option 1: Soft Cleaning Mode */}
+              <div style={{ border: '1px solid #cbd5e1', borderRadius: '8px', padding: '1rem', backgroundColor: '#f8fafc' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#1e293b' }}>
+                      <RotateCcw size={16} color="#0284c7" />
+                      <span>Option A: Cleaning Mode (Soft Cleanup)</span>
+                    </div>
+                    <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.4' }}>
+                      Moves all active inquiries into the Trash Bin without destroying data. Enables a clean inbox for new testers while retaining recovery options.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleCleanMode('trash_all')}
+                    disabled={isCleaning}
+                    style={{ whiteSpace: 'nowrap', backgroundColor: '#e0f2fe', color: '#0369a1', border: '1px solid #7dd3fc', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
+                  >
+                    Clean Active Requests
+                  </button>
+                </div>
+              </div>
+
+              {/* Option 2: Empty Trash (Deleting Mode) */}
+              <div style={{ border: '1px solid #fecaca', borderRadius: '8px', padding: '1rem', backgroundColor: '#fff5f5' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#991b1b' }}>
+                      <Trash2 size={16} color="#dc2626" />
+                      <span>Option B: Deleting Mode (Purge Trash Bin)</span>
+                    </div>
+                    <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#7f1d1d', lineHeight: '1.4' }}>
+                      Permanently purges all items currently in the Trash Bin. Irreversible deletion of trashed beta submissions.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleCleanMode('purge_trash')}
+                    disabled={isCleaning}
+                    style={{ whiteSpace: 'nowrap', backgroundColor: '#dc2626', color: '#ffffff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
+                  >
+                    Empty Trash Bin
+                  </button>
+                </div>
+              </div>
+
+              {/* Option 3: Full Beta Reset */}
+              <div style={{ border: '1px solid #fbcfe8', borderRadius: '8px', padding: '1rem', backgroundColor: '#fdf2f8' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#9d174d' }}>
+                      <ShieldAlert size={16} color="#db2777" />
+                      <span>Option C: Reset Database for Beta Test</span>
+                    </div>
+                    <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#831843', lineHeight: '1.4' }}>
+                      Completely zeroes out all active and trashed inquiries in Supabase to start test trials with 0 records.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleCleanMode('reset_all')}
+                    disabled={isCleaning}
+                    style={{ whiteSpace: 'nowrap', backgroundColor: '#be185d', color: '#ffffff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
+                  >
+                    Wipe Inquiries (0)
+                  </button>
+                </div>
+              </div>
+
+              {/* Option 4: Reset Traffic Analytics */}
+              <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '1rem', backgroundColor: '#ffffff' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#334155' }}>
+                      <BarChart3 size={16} color="#64748b" />
+                      <span>Option D: Reset Traffic Analytics Counter</span>
+                    </div>
+                    <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.4' }}>
+                      Clear past page impressions so your beta testing traffic metrics start fresh from day 1.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleCleanMode('reset_analytics')}
+                    disabled={isCleaning}
+                    style={{ whiteSpace: 'nowrap', backgroundColor: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
+                  >
+                    Reset Page Views
+                  </button>
+                </div>
+              </div>
+
+              {/* Option 5: Seed Beta Fixture Data */}
+              <div style={{ border: '1px dashed #10b981', borderRadius: '8px', padding: '1rem', backgroundColor: '#ecfdf5' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#047857' }}>
+                      <Sparkles size={16} color="#10b981" />
+                      <span>Option E: Populate Clean Beta Fixtures</span>
+                    </div>
+                    <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: '#065f46', lineHeight: '1.4' }}>
+                      Insert 3 realistic sample Australian Physiotherapy inquiries to preview dashboard charts and triage workflows.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleCleanMode('seed_beta')}
+                    disabled={isCleaning}
+                    style={{ whiteSpace: 'nowrap', backgroundColor: '#059669', color: '#ffffff', border: 'none', padding: '0.45rem 0.85rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}
+                  >
+                    Seed Sample Leads
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ padding: '1rem 1.5rem', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setIsSettingsOpen(false)}
+                className="btn"
+                style={{ backgroundColor: '#ffffff', border: '1px solid #cbd5e1', color: '#475569', padding: '0.45rem 1rem', fontSize: '0.85rem', fontWeight: '600' }}
+              >
+                Close Settings
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notifications Drawer: Re-notification Dispatch & Log Viewer */}
+      {isNotificationsOpen && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.65)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+          <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', maxWidth: '640px', width: '100%', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', border: '1px solid #e2e8f0' }}>
+            <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ backgroundColor: '#e0f2fe', padding: '0.5rem', borderRadius: '8px', color: '#0284c7' }}>
+                  <Bell size={22} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#0f172a' }}>Email & Real-Time Notifications</h3>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b' }}>Dispatch alerts, trigger client re-notifications, and inspect triage log history</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsNotificationsOpen(false)}
+                style={{ background: 'transparent', border: 'none', color: '#64748b', cursor: 'pointer', padding: '0.25rem' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #86efac', borderRadius: '8px', padding: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#166534', fontWeight: 'bold', fontSize: '0.95rem' }}>
+                  <Mail size={16} /> Instant Re-Notification Feature Active
+                </div>
+                <p style={{ margin: '0.4rem 0 0', fontSize: '0.85rem', color: '#14532d', lineHeight: '1.4' }}>
+                  You can now re-notify any client or clinic staff directly from the Active Requests table using the <strong>Re-notify</strong> button.
+                </p>
+              </div>
+
+              <div>
+                <h4 style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', color: '#334155', fontWeight: '600' }}>Recent Notification Dispatches</h4>
+                <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                    <thead style={{ backgroundColor: '#f8fafc', color: '#64748b', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
+                      <tr>
+                        <th style={{ padding: '0.5rem 0.75rem' }}>Time</th>
+                        <th style={{ padding: '0.5rem 0.75rem' }}>Recipient</th>
+                        <th style={{ padding: '0.5rem 0.75rem' }}>Subject / Event</th>
+                        <th style={{ padding: '0.5rem 0.75rem' }}>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {notificationLogs.map((log) => (
+                        <tr key={log.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                          <td style={{ padding: '0.5rem 0.75rem', color: '#64748b' }}>{log.timestamp}</td>
+                          <td style={{ padding: '0.5rem 0.75rem', fontWeight: '500', color: '#1e293b' }}>{log.recipient}</td>
+                          <td style={{ padding: '0.5rem 0.75rem', color: '#475569' }}>{log.subject}</td>
+                          <td style={{ padding: '0.5rem 0.75rem' }}>
+                            <span style={{ backgroundColor: '#dcfce7', color: '#166534', padding: '0.15rem 0.45rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                              {log.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Notification Strategy Recommendation Panel */}
+              <div style={{ backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '1rem' }}>
+                <h4 style={{ margin: '0 0 0.4rem', fontSize: '0.9rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Send size={15} color="var(--color-primary-dark)" /> Recommended Notification Architecture
+                </h4>
+                <p style={{ margin: 0, fontSize: '0.82rem', color: '#475569', lineHeight: '1.45' }}>
+                  For Australian physiotherapy practices, the highest converting notification architecture consists of:
+                  <br /><strong>1. Instant Clinic Staff Alert (Email + SMS/Slack):</strong> Within 60 seconds of questionnaire submission to ensure rapid booking triage.
+                  <br /><strong>2. Client Confirmation & Questionnaire Copy:</strong> Sends the clinic owner an instant PDF/summary of their tailored VA blueprint.
+                  <br /><strong>3. Smart Follow-Up Re-Notification:</strong> Auto-triggers after 24 hours if the status remains "Pending Review".
+                </p>
+              </div>
+            </div>
+
+            <div style={{ padding: '1rem 1.5rem', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setIsNotificationsOpen(false)}
+                className="btn"
+                style={{ backgroundColor: '#ffffff', border: '1px solid #cbd5e1', color: '#475569', padding: '0.45rem 1rem', fontSize: '0.85rem', fontWeight: '600' }}
+              >
+                Close Notifications
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

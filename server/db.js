@@ -233,3 +233,94 @@ export async function getAnalyticsSummary() {
     topService
   };
 }
+
+/**
+ * Settings & Cleaning Modes for Admin Dashboard
+ */
+export async function trashAllActiveInquiries() {
+  const now = new Date().toISOString();
+  const { data, error } = await supabase
+    .from('inquiries')
+    .update({ is_deleted: true, deleted_at: now })
+    .eq('is_deleted', false)
+    .select();
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+export async function purgeAllTrashedInquiries() {
+  const { data, error } = await supabase
+    .from('inquiries')
+    .delete()
+    .eq('is_deleted', true)
+    .select();
+
+  if (error) throw new Error(error.message);
+  return (data || []).length;
+}
+
+export async function resetAllInquiries() {
+  const { error } = await supabase
+    .from('inquiries')
+    .delete()
+    .neq('id', 0);
+
+  if (error) throw new Error(error.message);
+  return true;
+}
+
+export async function resetPageViews() {
+  const { error } = await supabase
+    .from('page_views')
+    .delete()
+    .neq('id', 0);
+
+  if (error) throw new Error(error.message);
+  return true;
+}
+
+export async function seedBetaInquiries() {
+  const now = new Date().toISOString();
+  const betaItems = [
+    {
+      name: 'Dr. Lachlan Murphy',
+      email: 'lachlan@melbournephysio.au',
+      is_spmc: 'Yes',
+      service_interest: 'Desk Work only',
+      schedule_meeting: 'Yes (Mon 3:00 PM AEST)',
+      status: 'Pending Review',
+      is_deleted: false,
+      created_at: now
+    },
+    {
+      name: 'Sarah Jennings, APAM',
+      email: 'sarah@brisbanerehab.com.au',
+      is_spmc: 'No',
+      service_interest: 'Desk Work + Data gathering',
+      schedule_meeting: 'Yes (Tue 4:00 PM AEST)',
+      status: 'Meeting Scheduled',
+      is_deleted: false,
+      created_at: now
+    },
+    {
+      name: 'Mark Henderson',
+      email: 'mark@sydneycoastal.com.au',
+      is_spmc: 'Yes',
+      service_interest: 'Contract Review',
+      schedule_meeting: 'No',
+      status: 'Replied via Email',
+      is_deleted: false,
+      created_at: now
+    }
+  ];
+
+  const { data, error } = await supabase
+    .from('inquiries')
+    .insert(betaItems)
+    .select();
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+

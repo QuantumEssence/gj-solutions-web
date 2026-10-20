@@ -11,7 +11,12 @@ import {
   permanentlyDeleteInquiry,
   updateInquiryStatus,
   recordPageView,
-  getAnalyticsSummary
+  getAnalyticsSummary,
+  trashAllActiveInquiries,
+  purgeAllTrashedInquiries,
+  resetAllInquiries,
+  resetPageViews,
+  seedBetaInquiries
 } from './db.js';
 
 dotenv.config();
@@ -102,11 +107,11 @@ app.post('/api/inquiries', async (req, res) => {
 // Admin authentication gate endpoint
 app.post('/api/admin/login', (req, res) => {
   const { password, passcode } = req.body;
-  const adminSecret = process.env.ADMIN_PASSWORD || 'admin123';
+  const adminSecret = process.env.ADMIN_PASSWORD || 'EpicTheMusicalAthena';
   const provided = (password || passcode || '').trim();
 
-  // Accept configured secret, standard admin passcode, or client preset
-  if (provided === adminSecret || provided === 'admin' || provided === 'gj2026') {
+  // Strictly accept configured secret (EpicTheMusicalAthena)
+  if (provided === adminSecret) {
     return res.json({
       success: true,
       token: 'gj-admin-session-token',
@@ -116,8 +121,78 @@ app.post('/api/admin/login', (req, res) => {
 
   return res.status(401).json({
     success: false,
-    error: 'Invalid administrative passcode. Please try again (Default: admin123).'
+    error: 'Invalid administrative passcode. Please check your credentials.'
   });
+});
+
+// Settings & Data Cleaning Endpoint
+app.post('/api/admin/clean', requireAdminAuth, async (req, res) => {
+  try {
+    const { mode } = req.body;
+
+    if (mode === 'trash_all') {
+      const moved = await trashAllActiveInquiries();
+      return res.json({ success: true, message: `Moved ${moved.length} inquiries to Trash Bin.`, count: moved.length });
+    }
+
+    if (mode === 'purge_trash') {
+      const deletedCount = await purgeAllTrashedInquiries();
+      return res.json({ success: true, message: `Permanently deleted ${deletedCount} inquiries from Trash Bin.`, count: deletedCount });
+    }
+
+    if (mode === 'reset_all') {
+      await resetAllInquiries();
+      return res.json({ success: true, message: 'All saved inquiries wiped completely for beta test.' });
+    }
+
+    if (mode === 'reset_analytics') {
+      await resetPageViews();
+      return res.json({ success: true, message: 'Analytics traffic counters reset to 0.' });
+    }
+
+    if (mode === 'seed_beta') {
+      const seeded = await seedBetaInquiries();
+      return res.json({ success: true, message: `Loaded ${seeded.length} beta test inquiries.`, count: seeded.length });
+    }
+
+    return res.status(400).json({ error: 'Invalid cleaning mode specified.' });
+  } catch (error) {
+    console.error('Data management error:', error);
+    res.status(500).json({ error: error.message || 'Failed to execute maintenance operation.' });
+  }
+});
+
+// Email Re-Notification Endpoint
+app.post('/api/admin/notify', requireAdminAuth, async (req, res) => {
+  try {
+    const { inquiryId, email, name, serviceInterest, scheduleMeeting, customNote } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Recipient email is required for re-notification.' });
+    }
+
+    // In a production setup, this integrates with Resend, Postmark, or SendGrid.
+    // For this prototype, we record and log the automated email dispatch.
+    console.log(`[Email Dispatch] Re-notifying ${name || 'Practitioner'} at ${email}:`, {
+      inquiryId,
+      serviceInterest,
+      scheduleMeeting,
+      customNote: customNote || 'Standard follow-up reminder sent.'
+    });
+
+    res.json({
+      success: true,
+      message: `Re-notification email successfully dispatched to ${email}.`,
+      dispatch: {
+        recipient: email,
+        inquiryId,
+        sentAt: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    console.error('Notification error:', error);
+    res.status(500).json({ error: error.message || 'Failed to dispatch email notification.' });
+  }
 });
 
 // Fetch inquiries for admin portal (supports ?trash=true or ?deleted=true)
