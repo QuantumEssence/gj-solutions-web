@@ -84,10 +84,10 @@ const Admin = () => {
   const [notificationLogs, setNotificationLogs] = useState<NotificationLog[]>([
     { 
       id: 1, 
-      timestamp: new Date().toLocaleTimeString(), 
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 
       recipient: 'clinic-admin@gjsolutions.com.au', 
-      status: 'Ready', 
-      subject: 'System standby for Beta Test launches' 
+      status: 'Active', 
+      subject: 'Inquiry alert dispatcher standby' 
     }
   ]);
 
@@ -722,6 +722,10 @@ const Admin = () => {
         onClose={() => setIsSettingsOpen(false)}
         onCleanMode={handleCleanMode}
         isCleaning={isCleaning}
+        onOpenPasswordModal={() => {
+          setIsSettingsOpen(false);
+          setIsPasswordModalOpen(true);
+        }}
       />
 
       {/* Notifications Modal: Re-notification Dispatch & Log Viewer */}

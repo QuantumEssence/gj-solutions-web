@@ -8,7 +8,6 @@ import {
   CheckCircle2, 
   Star, 
   HelpCircle, 
-  Activity, 
   Sparkles,
   Layers,
   PhoneCall
@@ -67,8 +66,8 @@ const Home = () => {
             <span>Strict Non-Clinical & Zero PHI Local Storage</span>
           </div>
           <div className="trust-item">
-            <Activity size={18} />
-            <span>Cliniko, Nookal & Coreplus Proficient</span>
+            <Layers size={18} />
+            <span>Allied Health Systems Proficient</span>
           </div>
           <div className="trust-item">
             <CheckCircle2 size={18} />
@@ -96,7 +95,7 @@ const Home = () => {
             </div>
             <h3 className="value-title">Proactive Diary Coordination</h3>
             <p className="value-description">
-              Eliminate the cost of missed calls and unfilled cancellations across Cliniko, Nookal, and Coreplus through responsive waitlist triage and patient communication.
+              Eliminate the cost of missed calls and unfilled cancellations across practice diaries through responsive waitlist triage and patient communication.
             </p>
           </div>
 
@@ -119,18 +118,9 @@ const Home = () => {
         </div>
         <h2 className="section-title">Clinical Systems & Software Proficiency</h2>
         <p className="section-subtitle" style={{ margin: '0 auto', maxWidth: '650px' }}>
-          Seamless integration with the practice management platforms Australian allied health clinics rely on every day.
+          Seamless administrative coordination across Australian allied health, telephony, and communication platforms.
         </p>
         <div className="software-logos">
-          <div className="software-badge">
-            <Activity size={18} /> CLINIKO
-          </div>
-          <div className="software-badge">
-            <Activity size={18} /> NOOKAL
-          </div>
-          <div className="software-badge">
-            <Activity size={18} /> COREPLUS
-          </div>
           <div className="software-badge">
             <PhoneCall size={18} /> JUSTCALL
           </div>
@@ -193,7 +183,7 @@ const Home = () => {
           {content.faqs.map((faq, idx) => (
             <div key={idx} className="faq-card">
               <h4 className="faq-question">
-                <Activity size={18} style={{ color: 'var(--color-primary)' }} />
+                <HelpCircle size={18} style={{ color: 'var(--color-primary)' }} />
                 {faq.q || faq.question}
               </h4>
               <p className="faq-answer">
