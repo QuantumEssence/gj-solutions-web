@@ -19,7 +19,7 @@
 }
 
 .sidebar-header {
-  padding: 1.5rem 1.25rem;
+  padding: 1.25rem 1rem;
   border-bottom: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
@@ -27,30 +27,55 @@
   gap: 0.5rem;
 }
 
-.logo-placeholder-box {
-  border: 2px dashed #cbd5e1;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+.logo-brand-box {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background-color: #f0fdfa;
+  border: 1px solid #ccfbf1;
+  flex: 1;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.logo-brand-box:hover {
+  background-color: #e6fffa;
+  border-color: #99f6e4;
+}
+
+.logo-icon-badge {
+  background: linear-gradient(135deg, #115e59 0%, #0f766e 100%);
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  background-color: #f8fafc;
-  flex: 1;
-  transition: padding 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(17, 94, 89, 0.15);
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
 }
 
 .logo-text {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--color-primary-dark);
+  line-height: 1.2;
   white-space: nowrap;
 }
 
 .logo-hint {
-  font-size: 0.7rem;
-  color: #64748b;
+  font-size: 0.68rem;
+  color: #0f766e;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
@@ -134,21 +159,39 @@
 }
 
 .sidebar-footer {
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 1.25rem;
   font-size: 0.8rem;
-  color: #a0aec0;
+  color: #64748b;
   border-top: 1px solid #e2e8f0;
   white-space: nowrap;
 }
 
-.legal-links-placeholder a {
-  color: #94a3b8;
-  text-decoration: none;
+.sidebar-legal-links {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.75rem;
 }
 
-.legal-links-placeholder a:hover {
+.sidebar-legal-links a {
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.sidebar-legal-links a:hover {
+  color: var(--color-primary-dark);
   text-decoration: underline;
+}
+
+.legal-divider {
+  color: #cbd5e1;
+}
+
+.copyright-text {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  margin: 0;
 }
 
 /* =========================================================
@@ -160,20 +203,22 @@
 
 .sidebar.collapsed .sidebar-header {
   flex-direction: column;
-  padding: 1rem 0.5rem;
-  gap: 0.75rem;
+  padding: 0.85rem 0.4rem;
+  gap: 0.5rem;
 }
 
-.sidebar.collapsed .logo-placeholder-box {
+.sidebar.collapsed .logo-brand-box {
   padding: 0.4rem;
   width: 100%;
+  justify-content: center;
 }
 
 .sidebar.collapsed .logo-text {
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .sidebar.collapsed .logo-hint,
+.sidebar.collapsed .logo-text-group,
 .sidebar.collapsed .nav-text,
 .sidebar.collapsed .sidebar-footer {
   display: none;

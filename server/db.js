@@ -195,7 +195,8 @@ export async function getAnalyticsSummary() {
   }
 
   const uniqueIpSet = new Set((pageViewsData || []).map(pv => pv.ip_hash));
-  const uniqueVisitors = Math.max(uniqueIpSet.size, 248);
+  const fallbackVisitors = process.env.ANALYTICS_FALLBACK_VISITORS ? Number(process.env.ANALYTICS_FALLBACK_VISITORS) : 0;
+  const uniqueVisitors = uniqueIpSet.size > 0 ? uniqueIpSet.size : fallbackVisitors;
 
   const active = activeInquiries || [];
   const submissionsCount = totalSubmissions ?? active.length;
@@ -323,4 +324,105 @@ export async function seedBetaInquiries() {
   if (error) throw new Error(error.message);
   return data || [];
 }
+
+/**
+ * Baseline default site content representing active Australian clinic support copy.
+ */
+export const DEFAULT_SITE_CONTENT = {
+  hero_title: 'Specialized Administrative Support for Sports & Musculoskeletal Practitioners',
+  hero_subtitle: 'Empowering Allied Health Clinicians Across Australia',
+  hero_description: 'Dedicated practice management, document formatting, and desk workflows tailored for busy musculoskeletal and sports medicine clinics in Victoria, New South Wales, and Queensland.',
+  mission_title: 'Our Clinical Support Mission',
+  mission_body_1: 'We relieve healthcare practitioners from administrative burdens so they can focus on patient care and clinical excellence.',
+  mission_body_2: 'In full compliance with Australian Privacy Principles (APPs), our team provides secure, reliable practice coordination without handling confidential medical records.',
+  faqs: [
+    {
+      q: 'Do you handle direct patient health records (PHI)?',
+      a: 'No. G&J Solutions operates in strict adherence with Australian Privacy Principles (APPs) and our Memorandum of Agreement (MOA). We never collect, store, or process confidential patient diagnoses, prescriptions, or clinical medical records.'
+    },
+    {
+      q: 'What clinical workflows do you assist with?',
+      a: 'We specialize in desk work, practitioner scheduling, report template formatting, meeting coordination, and administrative data preparation.'
+    },
+    {
+      q: 'Are your services available across Australia?',
+      a: 'Yes, our team supports clinics across Victoria, New South Wales, and Queensland operating on AEST/AEDT timezones.'
+    }
+  ],
+  testimonials: [
+    {
+      quote: 'G&J Solutions streamlined our practitioner desk work and report formatting, saving our clinic over 15 hours each week.',
+      name: 'Dr. Lachlan Murphy',
+      role: 'Principal Physiotherapist, Melbourne'
+    },
+    {
+      quote: 'Their compliance with Australian privacy standards and rapid turnaround gives our practice total peace of mind.',
+      name: 'Sarah Jennings, APAM',
+      role: 'Clinical Director, Brisbane'
+    }
+  ]
+};
+
+let runtimeSiteContent = null;
+
+/**
+ * Retrieves dynamic site content by key (defaults to 'homepage').
+ * Returns the stored JSONB or static fallback object if not yet seeded.
+ */
+export async function getSiteContent(id = 'homepage') {
+  try {
+    const { data, error } = await supabase
+      .from('site_content')
+      .select('content, updated_at')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error || !data || !data.content) {
+      return runtimeSiteContent || DEFAULT_SITE_CONTENT;
+    }
+
+    return data.content;
+  } catch (err) {
+    console.warn(`[getSiteContent] Warning: could not query site_content (${err.message}). Using fallback defaults.`);
+    return runtimeSiteContent || DEFAULT_SITE_CONTENT;
+  }
+}
+
+/**
+ * Upserts dynamic site content by key (defaults to 'homepage').
+ */
+export async function updateSiteContent(id = 'homepage', content) {
+  if (!content || typeof content !== 'object' || Array.isArray(content)) {
+    throw new Error('Invalid content payload. Expected a valid JSON object.');
+  }
+
+  runtimeSiteContent = {
+    ...(runtimeSiteContent || DEFAULT_SITE_CONTENT),
+    ...content
+  };
+
+  const now = new Date().toISOString();
+  try {
+    const { data, error } = await supabase
+      .from('site_content')
+      .upsert({
+        id,
+        content: runtimeSiteContent,
+        updated_at: now
+      }, { onConflict: 'id' })
+      .select()
+      .single();
+
+    if (error) {
+      console.warn(`[updateSiteContent] Supabase persistence notice: ${error.message}. Active in runtime cache.`);
+      return runtimeSiteContent;
+    }
+
+    return data?.content || runtimeSiteContent;
+  } catch (err) {
+    console.warn(`[updateSiteContent] Supabase persistence exception: ${err.message}. Active in runtime cache.`);
+    return runtimeSiteContent;
+  }
+}
+
 

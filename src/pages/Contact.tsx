@@ -202,7 +202,7 @@ const Contact = () => {
     <div className="contact-page fade-in">
       <div className="section-header text-center mb-4">
         <h1 className="section-title" style={{ fontSize: '2.25rem', marginBottom: '0.75rem' }}>Practice Consultation Request</h1>
-        <p className="section-subtitle" style={{ maxWidth: '640px', margin: '0 auto', fontSize: '1.125rem', lineHeight: '1.6', color: '#f1f5f9' }}>
+        <p className="section-subtitle" style={{ maxWidth: '640px', margin: '0 auto', fontSize: '1.125rem', lineHeight: '1.6', color: 'var(--color-text-light)' }}>
           Complete the practice assessment below to help us tailor an operational support structure for your clinic.
         </p>
       </div>
@@ -210,23 +210,23 @@ const Contact = () => {
       <div
         className="compliance-banner mb-4"
         style={{
-          backgroundColor: '#fef2f2',
-          border: '1.5px solid #b91c1c',
+          backgroundColor: '#ffffff',
+          border: '1px solid #e2e8f0',
+          borderLeft: '5px solid #dc2626',
           padding: '1.125rem 1.5rem',
           borderRadius: '8px',
           display: 'flex',
           alignItems: 'flex-start',
           gap: '1rem',
-          color: '#991b1b',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
         }}
       >
-        <AlertTriangle size={24} style={{ flexShrink: 0, marginTop: '2px', color: '#b91c1c' }} />
+        <AlertTriangle size={24} style={{ flexShrink: 0, marginTop: '2px', color: '#dc2626' }} />
         <div>
-          <strong style={{ display: 'block', marginBottom: '0.35rem', fontSize: '1.05rem', color: '#991b1b' }}>
+          <strong style={{ display: 'block', marginBottom: '0.35rem', fontSize: '1.05rem', color: '#0f172a' }}>
             Confidentiality & Privacy Notice
           </strong>
-          <p style={{ margin: 0, fontSize: '1rem', lineHeight: '1.5', color: '#7f1d1d' }}>
+          <p style={{ margin: 0, fontSize: '0.975rem', lineHeight: '1.5', color: '#334155' }}>
             Do not submit protected health information (PHI) or patient records through this form. This channel is reserved strictly for clinic business and operational inquiries.
           </p>
         </div>
@@ -262,19 +262,21 @@ const Contact = () => {
               <div
                 className="mb-4"
                 style={{
-                  backgroundColor: '#fef2f2',
-                  border: '1.5px solid #b91c1c',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  borderLeft: '5px solid #dc2626',
                   padding: '1.125rem 1.25rem',
                   borderRadius: '8px',
-                  color: '#991b1b',
+                  color: '#1e293b',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.85rem',
                   fontSize: '1rem',
-                  lineHeight: '1.5'
+                  lineHeight: '1.5',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
                 }}
               >
-                <AlertTriangle size={22} style={{ flexShrink: 0, color: '#b91c1c' }} />
+                <AlertTriangle size={22} style={{ flexShrink: 0, color: '#dc2626' }} />
                 <span style={{ fontWeight: '500' }}>{errorMessage}</span>
               </div>
             )}
