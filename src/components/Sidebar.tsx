@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Menu, X, Home, User, Briefcase, Mail, Lock, ChevronLeft, ChevronRight, Activity } from 'lucide-react';
+import { Menu, X, Home, User, Briefcase, Mail, Lock, ChevronLeft, ChevronRight } from 'lucide-react';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -45,24 +45,39 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }: SidebarProps) => {
 
       <aside className={`sidebar ${isOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-header">
-          <Link to="/" className="logo-brand-box" onClick={() => setIsOpen(false)}>
-            <div className="logo-icon-badge">
-              <Activity size={18} />
+          {!isCollapsed ? (
+            <div className="sidebar-brand-container">
+              <Link to="/" className="sidebar-dashed-brand-box" onClick={() => setIsOpen(false)}>
+                <div className="dashed-brand-title">G&J Solutions</div>
+                <div className="dashed-brand-subtitle">[ Insert Logo Here ]</div>
+              </Link>
+              {onToggleCollapse && (
+                <button 
+                  className="collapse-toggle-btn" 
+                  onClick={onToggleCollapse}
+                  title="Shrink sidebar"
+                  aria-label="Shrink sidebar"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+              )}
             </div>
-            <div className="logo-text-group">
-              <span className="logo-text">{isCollapsed ? 'G&J' : 'G&J Solutions'}</span>
-              {!isCollapsed && <span className="logo-hint">Allied Practice Support</span>}
+          ) : (
+            <div className="sidebar-brand-container collapsed">
+              <Link to="/" className="sidebar-dashed-brand-box collapsed" onClick={() => setIsOpen(false)} title="G&J Solutions">
+                <span className="dashed-brand-title">G&J</span>
+              </Link>
+              {onToggleCollapse && (
+                <button 
+                  className="collapse-toggle-btn" 
+                  onClick={onToggleCollapse}
+                  title="Expand sidebar"
+                  aria-label="Expand sidebar"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              )}
             </div>
-          </Link>
-          {onToggleCollapse && (
-            <button 
-              className="collapse-toggle-btn" 
-              onClick={onToggleCollapse}
-              title={isCollapsed ? 'Expand sidebar' : 'Shrink sidebar'}
-              aria-label={isCollapsed ? 'Expand sidebar' : 'Shrink sidebar'}
-            >
-              {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-            </button>
           )}
         </div>
 
@@ -84,12 +99,12 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }: SidebarProps) => {
             <li className="admin-link-wrapper">
               <NavLink 
                 to="/admin" 
-                title="Admin Portal"
+                title="Admin Portal (PoC)"
                 className={({ isActive }) => isActive ? 'nav-link active admin-link' : 'nav-link admin-link'}
                 onClick={() => setIsOpen(false)}
               >
                 <span className="nav-icon"><Lock size={20} /></span>
-                <span className="nav-text admin-text">Admin Portal</span>
+                <span className="nav-text admin-text">Admin Portal (PoC)</span>
               </NavLink>
             </li>
           </ul>
@@ -102,7 +117,7 @@ const Sidebar = ({ isCollapsed = false, onToggleCollapse }: SidebarProps) => {
               <span className="legal-divider">|</span>
               <Link to="/terms-of-service" onClick={() => setIsOpen(false)}>Terms of Service</Link>
             </div>
-            <p className="copyright-text">© {new Date().getFullYear()} G&J Solutions (AU)</p>
+            <p className="copyright-text">© 2026 G&J Solutions</p>
           </div>
         )}
       </aside>

@@ -22,25 +22,35 @@ export interface SiteContent {
   mission_title: string;
   mission_body_1: string;
   mission_body_2: string;
+  out_of_scope_title?: string;
+  out_of_scope_description?: string;
+  out_of_scope_items?: string[];
   faqs: FAQItem[];
   testimonials: TestimonialItem[];
 }
 
 export const DEFAULT_CONTENT: SiteContent = {
-  hero_title: 'Virtual Practice Assistants for Australian Physiotherapists',
-  hero_subtitle: 'Dedicated Practice Support • Cliniko & Nookal Diary Optimization • Patient Intake Triage',
-  hero_description: 'We partner with independent physiotherapy and allied health clinics across Australia to streamline administrative operations. From patient scheduling and intake triage to diary optimization, our team ensures your clinicians focus entirely on delivering exceptional patient care.',
-  mission_title: 'Our Purpose: Restoring Focus to Clinical Care',
-  mission_body_1: 'At G&J Solutions, we believe allied health practitioners should spend their energy where it matters most: delivering clinical care and guiding patients through recovery — not burning out on appointment juggling, phone tags, and administrative backlogs.',
-  mission_body_2: 'We bridge frontdesk capacity gaps for physiotherapy practices across Melbourne, Sydney, Brisbane, Perth, Adelaide, and regional Australia. By operating directly inside your Practice Management Software (PMS), we function as an organic extension of your reception team, upholding strict Australian confidentiality standards and clinical governance.',
+  hero_title: 'Dedicated Practice Support & Virtual Assistants for Australian Physiotherapists',
+  hero_subtitle: 'Cliniko & Nookal Diary Optimization • Patient Intake Triage • Frontdesk Operations',
+  hero_description: 'We partner with independent physiotherapy and allied health clinics across Australia to streamline administrative operations. From patient scheduling and intake triage to diary optimization in Cliniko and Nookal, our team ensures your clinicians focus entirely on delivering exceptional patient care.',
+  mission_title: 'Our Mission',
+  mission_body_1: 'At G&J Solutions, we are dedicated to supporting independent physiotherapists. We relieve healthcare practitioners from administrative burdens so they can focus on patient care and clinical excellence.',
+  mission_body_2: 'Operating in strict adherence with Australian Privacy Principles (APPs) and our practice support protocols, our team provides secure, reliable practice coordination directly inside your Practice Management Software (Cliniko, Nookal, Coreplus) without handling confidential patient medical records.',
+  out_of_scope_title: 'Out of Scope Services',
+  out_of_scope_description: 'To ensure we provide the highest quality service in our areas of expertise, we explicitly do not handle:',
+  out_of_scope_items: [
+    'Accounting and tax filing',
+    'Accessing clients\' bank details',
+    'Tracking receipts of payments from clients'
+  ],
   faqs: [
+    {
+      q: 'Do you handle direct patient health records (PHI)?',
+      a: 'No. G&J Solutions operates in strict adherence with Australian Privacy Principles (APPs) and our Memorandum of Agreement (MOA). We never collect, store, or process confidential patient diagnoses, prescriptions, or clinical medical records.'
+    },
     {
       q: 'How does diary management integrate with our practice software?',
       a: 'We integrate securely with your existing practice management software, including Cliniko, Nookal, and Coreplus. Our assistants manage appointment bookings, practitioner calendars, recall lists, and short-notice cancellation fills following your clinic customized protocols.'
-    },
-    {
-      q: 'How is patient confidentiality maintained?',
-      a: 'Our administrative workflows adhere strictly to the Australian Privacy Principles (APPs). We handle only non-clinical operational tasks such as scheduling and intake distribution directly within your PMS. We never store patient health information on local devices, nor do we provide clinical advice or alter clinical treatment notes.'
     },
     {
       q: 'What is the onboarding timeline for a new clinic?',
@@ -49,19 +59,19 @@ export const DEFAULT_CONTENT: SiteContent = {
   ],
   testimonials: [
     {
-      quote: 'Partnering with G&J Solutions restored order to our daily clinic schedule. Diary gaps decreased noticeably within our first quarter because cancellations were triaged and filled proactively.',
-      name: 'Dr. Lachlan Murphy, B.Physio',
-      role: 'Clinical Director • Melbourne Sports Physiotherapy'
+      quote: 'G&J Solutions streamlined our practitioner desk work and report formatting, saving our clinic over 15 hours each week.',
+      name: 'Dr. Sarah Jenkins',
+      role: 'Principal Physiotherapist • Example Clinic'
     },
     {
-      quote: 'Our reception was burdened with intake management and GP documentation. Having reliable, privacy-conscious administrative support handling our communications has given our practitioners their evenings back.',
-      name: 'Sarah Jennings, APAM',
-      role: 'Principal Physiotherapist • Brisbane Rehabilitation Care'
+      quote: 'Their compliance with Australian privacy standards and rapid turnaround gives our practice total peace of mind.',
+      name: 'Mark Thompson',
+      role: 'Clinic Director • PhysioWorks AU'
     },
     {
-      quote: 'As a private practitioner managing high caseloads, handling administrative calls between consults was unsustainable. G&J Solutions stepped in smoothly and established consistent practice operations.',
-      name: 'Mark Henderson',
-      role: 'Director • Sydney Coastal Movement & Physiotherapy'
+      quote: 'G&J Solutions helped me reclaim 10 hours a week! My patients love how quickly their emails are answered now.',
+      name: 'Emma Davis',
+      role: 'Director • Mindful Psychology'
     }
   ]
 };
@@ -102,6 +112,11 @@ export async function fetchSiteContent(): Promise<SiteContent> {
       mission_title: content.mission_title || DEFAULT_CONTENT.mission_title,
       mission_body_1: content.mission_body_1 || DEFAULT_CONTENT.mission_body_1,
       mission_body_2: content.mission_body_2 || DEFAULT_CONTENT.mission_body_2,
+      out_of_scope_title: content.out_of_scope_title || DEFAULT_CONTENT.out_of_scope_title,
+      out_of_scope_description: content.out_of_scope_description || DEFAULT_CONTENT.out_of_scope_description,
+      out_of_scope_items: Array.isArray(content.out_of_scope_items) && content.out_of_scope_items.length > 0
+        ? content.out_of_scope_items
+        : DEFAULT_CONTENT.out_of_scope_items,
       faqs: Array.isArray(content.faqs) && content.faqs.length > 0 ? content.faqs : DEFAULT_CONTENT.faqs,
       testimonials: Array.isArray(content.testimonials) && content.testimonials.length > 0 ? content.testimonials : DEFAULT_CONTENT.testimonials
     };

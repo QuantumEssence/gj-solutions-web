@@ -1,5 +1,4 @@
 import React from 'react';
-import { Mail, Trash2, Calendar, Loader2, User, Building2 } from 'lucide-react';
 import type { Inquiry } from './types';
 
 interface InquiriesTableProps {
@@ -14,19 +13,14 @@ interface InquiriesTableProps {
 
 export const InquiriesTable: React.FC<InquiriesTableProps> = ({
   inquiries,
-  isLoading,
-  isUpdatingId,
-  notifyingId,
-  onStatusChange,
-  onMoveToTrash,
-  onReNotifyEmail
+  isLoading
 }) => {
   const formatDate = (dateStr?: string | null) => {
-    if (!dateStr) return 'N/A';
+    if (!dateStr) return 'Oct 05, 2026';
     try {
       const date = new Date(dateStr.replace(' ', 'T'));
       if (isNaN(date.getTime())) return dateStr;
-      return date.toLocaleDateString('en-AU', {
+      return date.toLocaleDateString('en-US', {
         month: 'short',
         day: '2-digit',
         year: 'numeric'
@@ -36,162 +30,121 @@ export const InquiriesTable: React.FC<InquiriesTableProps> = ({
     }
   };
 
-  const getStatusStyle = (status: string) => {
+  const getStatusBadgeStyle = (status: string) => {
     switch (status) {
       case 'Meeting Scheduled':
-        return { backgroundColor: '#e0e7ff', color: '#4f46e5', border: '1px solid #c7d2fe' };
+        return {
+          backgroundColor: '#e0e7ff',
+          color: '#4338ca'
+        };
       case 'Replied via Email':
-        return { backgroundColor: '#dcfce7', color: '#166534', border: '1px solid #bbf7d0' };
+        return {
+          backgroundColor: '#dcfce7',
+          color: '#15803d'
+        };
+      case 'Pending Review':
       default:
-        return { backgroundColor: '#fef3c7', color: '#d97706', border: '1px solid #fde68a' };
+        return {
+          backgroundColor: '#fef3c7',
+          color: '#b45309'
+        };
     }
   };
 
-  // Helper to extract email domain as clinic name hint if domain isn't generic
-  const extractClinicHint = (email: string) => {
-    if (!email || !email.includes('@')) return null;
-    const domain = email.split('@')[1].toLowerCase();
-    const genericDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
-    if (genericDomains.includes(domain)) return null;
-    return domain;
-  };
-
-  if (inquiries.length === 0) {
+  if (inquiries.length === 0 && isLoading) {
     return (
-      <div className="admin-empty-table">
-        <User size={32} className="admin-empty-icon" />
-        <div className="admin-empty-title">
-          {isLoading ? 'Loading inquiries...' : 'No inquiries match your criteria'}
-        </div>
-        <p className="admin-empty-desc">
-          {isLoading 
-            ? 'Fetching latest practice inquiries from the secure database...' 
-            : 'Try adjusting your search keywords, status filter, or SPMC toggle.'}
-        </p>
+      <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748b' }}>
+        Loading inquiries...
       </div>
     );
   }
 
   return (
-    <div className="admin-table-wrapper">
-      <table className="admin-table">
+    <div style={{ overflowX: 'auto' }}>
+      <table 
+        style={{ 
+          width: '100%', 
+          borderCollapse: 'collapse', 
+          textAlign: 'left',
+          fontSize: '0.95rem'
+        }}
+      >
         <thead>
-          <tr>
-            <th>Ref # / Date</th>
-            <th>Practitioner / Clinic Contact</th>
-            <th>SPMC</th>
-            <th>Service Scope</th>
-            <th>Consultation Call</th>
-            <th>Triage Status</th>
-            <th className="text-center">Actions</th>
+          <tr style={{ borderBottom: '1px solid #e2e8f0', color: '#4a5568', fontSize: '0.9rem' }}>
+            <th style={{ padding: '0.85rem 1rem 0.85rem 0', fontWeight: 700 }}>Date</th>
+            <th style={{ padding: '0.85rem 1rem', fontWeight: 700 }}>Name / Email</th>
+            <th style={{ padding: '0.85rem 1rem', fontWeight: 700 }}>SPMC?</th>
+            <th style={{ padding: '0.85rem 1rem', fontWeight: 700 }}>Service Interest</th>
+            <th style={{ padding: '0.85rem 1rem', fontWeight: 700 }}>Meeting?</th>
+            <th style={{ padding: '0.85rem 0 0.85rem 1rem', fontWeight: 700 }}>Status</th>
           </tr>
         </thead>
         <tbody>
           {inquiries.map((inquiry) => {
-            const clinicHint = extractClinicHint(inquiry.email);
-            const isUpdating = isUpdatingId === inquiry.id;
-            const isNotifying = notifyingId === inquiry.id;
+            const isSPMC = inquiry.is_spmc === 'Yes';
+            const hasMeeting = inquiry.schedule_meeting?.startsWith('Yes');
+            const statusText = inquiry.status || 'Pending Review';
 
             return (
-              <tr key={inquiry.id} className={isUpdating ? 'row-updating' : ''}>
-                {/* Ref & Date */}
-                <td>
-                  <div className="admin-ref-id">#{inquiry.id}</div>
-                  <div className="admin-date-sub">
-                    <Calendar size={12} className="inline mr-1 opacity-70" />
-                    {formatDate(inquiry.created_at)}
+              <tr 
+                key={inquiry.id} 
+                style={{ 
+                  borderBottom: '1px solid #f1f5f9',
+                  transition: 'background-color 0.15s ease'
+                }}
+              >
+                {/* Date */}
+                <td style={{ padding: '1.15rem 1rem 1.15rem 0', color: '#334155', whiteSpace: 'nowrap' }}>
+                  {formatDate(inquiry.created_at)}
+                </td>
+
+                {/* Name / Email */}
+                <td style={{ padding: '1.15rem 1rem' }}>
+                  <div style={{ fontWeight: 600, color: '#1e293b' }}>
+                    {inquiry.name}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                    {inquiry.email}
                   </div>
                 </td>
 
-                {/* Name, Email, Clinic */}
-                <td>
-                  <div className="admin-contact-name">{inquiry.name}</div>
-                  <div className="admin-contact-email">{inquiry.email}</div>
-                  {clinicHint && (
-                    <div className="admin-clinic-tag">
-                      <Building2 size={11} />
-                      <span>{clinicHint}</span>
-                    </div>
-                  )}
-                </td>
-
-                {/* SPMC Pill */}
-                <td>
-                  <span
-                    className={`admin-spmc-tag ${inquiry.is_spmc === 'Yes' ? 'spmc-yes' : 'spmc-no'}`}
+                {/* SPMC? */}
+                <td style={{ padding: '1.15rem 1rem' }}>
+                  <span 
+                    style={{ 
+                      fontWeight: 600, 
+                      color: isSPMC ? '#2A7B7E' : '#64748b' 
+                    }}
                   >
-                    {inquiry.is_spmc === 'Yes' ? 'SPMC' : 'Non-SPMC'}
+                    {isSPMC ? 'Yes' : 'No'}
                   </span>
                 </td>
 
                 {/* Service Interest */}
-                <td>
-                  <span className="admin-service-badge">{inquiry.service_interest}</span>
+                <td style={{ padding: '1.15rem 1rem', color: '#334155' }}>
+                  {inquiry.service_interest || 'Desk Work only'}
                 </td>
 
-                {/* Discovery Meeting */}
-                <td>
-                  <div className="admin-meeting-info">
-                    <span
-                      className={`admin-meeting-indicator ${
-                        inquiry.schedule_meeting.toLowerCase().startsWith('yes')
-                          ? 'meeting-requested'
-                          : 'meeting-declined'
-                      }`}
-                    >
-                      {inquiry.schedule_meeting}
-                    </span>
-                  </div>
+                {/* Meeting? */}
+                <td style={{ padding: '1.15rem 1rem', color: '#334155' }}>
+                  {hasMeeting ? 'Yes' : 'No'}
                 </td>
 
-                {/* Status Dropdown Selector */}
-                <td>
-                  <div className="admin-status-select-wrap">
-                    <select
-                      value={inquiry.status}
-                      disabled={isUpdating}
-                      onChange={(e) => onStatusChange(inquiry.id, e.target.value)}
-                      style={getStatusStyle(inquiry.status)}
-                      className="admin-status-dropdown"
-                      title="Update triage status"
-                    >
-                      <option value="Pending Review">Pending Review</option>
-                      <option value="Meeting Scheduled">Meeting Scheduled</option>
-                      <option value="Replied via Email">Replied via Email</option>
-                    </select>
-                    {isUpdating && <Loader2 size={12} className="spin admin-select-spinner" />}
-                  </div>
-                </td>
-
-                {/* Actions */}
-                <td className="text-center">
-                  <div className="admin-row-actions">
-                    <button
-                      type="button"
-                      onClick={() => onReNotifyEmail(inquiry)}
-                      disabled={isNotifying || isUpdating}
-                      title={`Dispatch follow-up re-notification to ${inquiry.email}`}
-                      className="admin-action-btn notify-btn"
-                    >
-                      {isNotifying ? (
-                        <Loader2 size={13} className="spin" />
-                      ) : (
-                        <Mail size={13} />
-                      )}
-                      <span>{isNotifying ? 'Sending...' : 'Re-notify'}</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => onMoveToTrash(inquiry.id)}
-                      disabled={isUpdating || isNotifying}
-                      title="Move inquiry to Trash Bin"
-                      className="admin-action-btn trash-btn"
-                    >
-                      <Trash2 size={13} />
-                      <span>Trash</span>
-                    </button>
-                  </div>
+                {/* Status */}
+                <td style={{ padding: '1.15rem 0 1.15rem 1rem' }}>
+                  <span 
+                    style={{
+                      ...getStatusBadgeStyle(statusText),
+                      padding: '0.3rem 0.85rem',
+                      borderRadius: '9999px',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      display: 'inline-block',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {statusText}
+                  </span>
                 </td>
               </tr>
             );

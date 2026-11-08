@@ -11,6 +11,42 @@ export interface Inquiry {
   created_at: string;
 }
 
+export const MOCK_INQUIRIES: Inquiry[] = [
+  {
+    id: 1,
+    name: 'Dr. Sarah Jenkins',
+    email: 'sarah@exampleclinic.com',
+    is_spmc: 'Yes',
+    service_interest: 'Report preparation only',
+    schedule_meeting: 'Yes',
+    status: 'Pending Review',
+    is_deleted: false,
+    created_at: '2026-10-05 10:30:00'
+  },
+  {
+    id: 2,
+    name: 'Mark Thompson',
+    email: 'mark.t@physioworks.au',
+    is_spmc: 'No',
+    service_interest: 'Desk Work + Data gathering',
+    schedule_meeting: 'Yes',
+    status: 'Meeting Scheduled',
+    is_deleted: false,
+    created_at: '2026-10-04 14:15:00'
+  },
+  {
+    id: 3,
+    name: 'Emma Davis',
+    email: 'emma@mindfulpsych.com',
+    is_spmc: 'Yes',
+    service_interest: 'Desk Work only',
+    schedule_meeting: 'No',
+    status: 'Replied via Email',
+    is_deleted: false,
+    created_at: '2026-10-02 09:00:00'
+  }
+];
+
 export interface AnalyticsSummary {
   totalSubmissions: number;
   trashedCount?: number;
@@ -21,6 +57,17 @@ export interface AnalyticsSummary {
   spmcPercentage: number;
   topService: string;
 }
+
+export const MOCK_ANALYTICS_SUMMARY: AnalyticsSummary = {
+  totalSubmissions: 12,
+  trashedCount: 0,
+  uniqueVisitors: 248,
+  totalViews: 412,
+  discoveryCalls: 3,
+  spmcCount: 8,
+  spmcPercentage: 66,
+  topService: 'Report Preparation'
+};
 
 export interface NotificationLog {
   id: number;
@@ -62,6 +109,9 @@ export interface SiteContent {
   mission_title: string;
   mission_body_1: string;
   mission_body_2: string;
+  out_of_scope_title?: string;
+  out_of_scope_description?: string;
+  out_of_scope_items?: string[];
   faqs: FAQItem[];
   testimonials: TestimonialItem[];
 }

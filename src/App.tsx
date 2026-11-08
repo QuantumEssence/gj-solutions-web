@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import { CommandMenu } from './components/CommandMenu';
+import { trackPageView } from './features/analytics';
 import Home from './pages/Home';
 import About from './pages/About';
 import Services from './pages/Services';
@@ -9,17 +11,13 @@ import Admin from './pages/Admin';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 
+import StudioPage from './pages/StudioPage';
+
 const PageTracker = () => {
   const location = useLocation();
 
   useEffect(() => {
-    fetch('/api/analytics/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path: location.pathname })
-    }).catch(() => {
-      // Ignore background tracking network errors silently
-    });
+    trackPageView({ path: location.pathname });
   }, [location.pathname]);
 
   return null;
@@ -31,7 +29,14 @@ function App() {
   return (
     <Router>
       <PageTracker />
-      <div className={`app-container ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
+      <CommandMenu />
+      <div 
+        className={`app-container ${isCollapsed ? 'sidebar-collapsed' : ''}`}
+        style={{
+          transitionTimingFunction: 'var(--ease-sheet)',
+          transitionDuration: 'var(--duration-sheet)',
+        }}
+      >
         <Sidebar 
           isCollapsed={isCollapsed} 
           onToggleCollapse={() => setIsCollapsed((prev) => !prev)} 
@@ -43,6 +48,7 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/studio/*" element={<StudioPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
           </Routes>

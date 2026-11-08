@@ -1,22 +1,60 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #367B7D;
+  --color-primary-dark: #2A7B7E;
+  --color-brand-teal: #2A7B7E;
+  --color-canvas: #F4F6F6;
+  --color-background: #F4F6F6;
+  --color-surface: #FFFFFF;
+  --color-surface-neutral: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-text-dark-slate: #0F172A;
+  --color-text-muted-slate: #334155;
+  --color-alert-bg: #FFF5F5;
+  --color-alert-border: #FED7D7;
+  --color-alert-fill: #FFF5F5;
+  --color-alert-crimson: #DC2626;
+
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+  --duration-sheet: 500ms;
+}
 
 :root {
-  /* Soft clinical neutrals with rich Australian medical teal brand accents */
-  --color-primary-dark: #115e59;     /* Deep Clinical Teal (WCAG AAA contrast on light) */
-  --color-primary: #0f766e;          /* Rich Teal */
-  --color-primary-light: #0d9488;    /* Interactive Teal */
-  --color-primary-subtle: #f0fdfa;   /* Light Teal Tint */
-  --color-secondary-light: #ccfbf1;  /* Soft Mint */
-  --color-accent: #14b8a6;
+  /* Global Design Tokens - Single Source of Truth */
+  --color-background: #F4F6F6;
+  --color-canvas: #F4F6F6;
+  --color-primary: #367B7D;
+  --color-primary-dark: #2A7B7E;
+  --color-brand-teal: #2A7B7E;
+  --color-surface: #FFFFFF;
+  --color-surface-neutral: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-alert-bg: #FFF5F5;
+  --color-alert-border: #FED7D7;
+  --color-alert-fill: #FFF5F5;
+  --color-alert-crimson: #DC2626;
+
+  /* Typography Colors */
+  --color-text: #0F172A;
+  --color-text-dark-slate: #0F172A;
+  --color-text-muted: #334155;
+  --color-text-muted-slate: #334155;
+  --color-text-light: #64748b;
+
+  /* Physical Easing Tokens */
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+  --duration-sheet: 500ms;
+
+  /* Clinical Theme Aliases */
+  --color-primary-light: #379598;
+  --color-primary-subtle: #f0fdfa;
+  --color-secondary-light: #ccfbf1;
+  --color-accent: var(--color-primary);
   --color-accent-subtle: #99f6e4;
-  --color-background: #f8fafc;       /* Crisp Clinical Neutral (Slate-50) */
-  --color-surface: #ffffff;          /* Pure White Card Surface */
-  --color-surface-muted: #f1f5f9;    /* Subtle Slate Muted */
-  --color-border: #e2e8f0;           /* Soft Slate Border */
+  --color-surface-muted: #f1f5f9;
   --color-border-subtle: #f1f5f9;
-  --color-text: #0f172a;             /* High-contrast Slate-900 */
-  --color-text-muted: #334155;       /* Readable Slate-700 */
-  --color-text-light: #64748b;       /* Tertiary Slate-500 */
   
   --font-family-main: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
@@ -27,7 +65,7 @@
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-hover: 0 12px 24px -4px rgba(17, 94, 89, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 12px 24px -4px rgba(42, 123, 126, 0.16), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
 }
 
 * {
@@ -73,6 +111,8 @@ p {
   min-height: 100vh;
   flex-direction: column;
   background-color: var(--color-background);
+  transition-timing-function: var(--ease-sheet, cubic-bezier(0.32, 0.72, 0, 1));
+  transition-duration: var(--duration-sheet, 500ms);
 }
 
 @media (min-width: 768px) {
@@ -89,7 +129,7 @@ p {
   width: 100%;
   background-color: var(--color-background);
   min-height: 100vh;
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-left var(--duration-sheet, 500ms) var(--ease-sheet, cubic-bezier(0.32, 0.72, 0, 1));
 }
 
 @media (min-width: 768px) {
@@ -266,3 +306,66 @@ p {
 .gap-2 { gap: 0.5rem; }
 .gap-4 { gap: 1rem; }
 .grid { display: grid; }
+
+/* Editorial Typography, Craft Border & Spring Tokens */
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "cv05" 1, "zero" 1;
+  }
+
+  .craft-border {
+    border: 1px solid rgba(42, 123, 126, 0.15);
+  }
+
+  .dashed-placeholder {
+    border: 1.5px dashed #2A7B7E;
+    background: rgba(42, 123, 126, 0.03);
+    border-radius: 10px;
+  }
+
+  .ease-sheet {
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .duration-sheet {
+    transition-duration: 500ms;
+  }
+
+  .alert-box {
+    background-color: var(--color-alert-bg);
+    border: 1px solid var(--color-alert-border);
+    color: var(--color-alert-crimson);
+  }
+}
+
+/* Explicit class definitions for non-layer consumers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "cv05" 1, "zero" 1;
+}
+
+.craft-border {
+  border: 1px solid rgba(42, 123, 126, 0.15);
+}
+
+.dashed-placeholder {
+  border: 1.5px dashed #2A7B7E;
+  background: rgba(42, 123, 126, 0.03);
+  border-radius: 10px;
+}
+
+.ease-sheet {
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.duration-sheet {
+  transition-duration: 500ms;
+}
+
+.alert-box {
+  background-color: var(--color-alert-bg);
+  border: 1px solid var(--color-alert-border);
+  color: var(--color-alert-crimson);
+}
+

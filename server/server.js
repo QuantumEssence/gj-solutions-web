@@ -485,10 +485,25 @@ app.post('/api/inquiries', inquiriesRateLimiter, async (req, res) => {
       'medical record',
       'prescription',
       'medication',
-      'phi'
+      'phi',
+      'pathology',
+      'radiology',
+      'treatment note',
+      'clinical note',
+      'soap note',
+      'prognosis'
     ];
-    const detectedKeyword = prohibitedKeywords.find(kw => combinedContent.includes(kw));
-    if (detectedKeyword) {
+    const detectedKeyword = prohibitedKeywords.find(kw => {
+      const reg = new RegExp(`\\b${kw}s?\\b`, 'i');
+      return reg.test(combinedContent);
+    });
+
+    // Check for Australian Medicare numbers, MRN, and ICD-10 codes
+    const hasMedicare = /\b[2-6]\d{3}\s?\d{5}\s?\d\b/.test(combinedContent) || /\bmedicare\b/i.test(combinedContent);
+    const hasMrn = /\b(?:mrn|urn)\b/i.test(combinedContent);
+    const hasIcd10 = /\bicd-?10\b/i.test(combinedContent) || /\b[A-TV-Z][0-9]{2}(\.[0-9A-Z]{1,4})?\b/.test(`${name} ${email} ${serviceInterest} ${scheduleMeeting}`);
+
+    if (detectedKeyword || hasMedicare || hasMrn || hasIcd10) {
       return res.status(400).json({
         error:
           'Strict Data Privacy Restriction: Inquiries must not contain patient health information or medical records.'

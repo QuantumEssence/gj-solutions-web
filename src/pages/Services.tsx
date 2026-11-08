@@ -1,255 +1,241 @@
-import { Link } from 'react-router-dom';
-import { 
-  ArrowRight, 
-  CalendarCheck, 
-  ClipboardList, 
-  FileSearch, 
-  ShieldAlert, 
-  Sparkles,
-  Layers,
-  Check
-} from 'lucide-react';
+import { Calendar, BarChart3, FileText } from 'lucide-react';
 
 const Services = () => {
-  const servicesList = [
+  const featureCards = [
     {
       id: 1,
-      icon: <CalendarCheck size={24} />,
-      title: "Frontdesk & Diary Management",
-      description: "Patient communication, appointment scheduling, and practitioner diary coordination in Cliniko and Nookal. We actively manage cancellations and waitlists to maintain full clinician appointment books.",
-      serviceParam: "Desk Work only",
-      highlights: [
-        "Inbound telephone & email patient inquiry triage",
-        "Cliniko / Nookal / Coreplus calendar scheduling",
-        "Rapid cancellation fill & waitlist outreach",
-        "Practitioner buffer time & room optimization"
-      ]
+      icon: <Calendar size={28} style={{ color: '#2A7B7E' }} />,
+      title: 'Frontdesk Work',
+      description: 'Emails, scheduling, and calls. Managing your inbox and professional calendar alongside personal commitments for a stress-free schedule.'
     },
     {
       id: 2,
-      icon: <ClipboardList size={24} />,
-      title: "Patient Intake Triage & Documentation",
-      description: "Systematic intake questionnaire collection, medical practitioner referral tracking, and non-clinical document preparation formatted to your clinic's precise standards.",
-      serviceParam: "Desk Work + Data gathering",
-      highlights: [
-        "Medicare EPC / CDM referral document validation",
-        "DVA, WorkCover & NDIS intake registration",
-        "Digital health questionnaire follow-ups",
-        "Pre-consult reminder SMS & email dispatch"
-      ]
+      icon: <BarChart3 size={28} style={{ color: '#2A7B7E' }} />,
+      title: 'Report Preparation & Data Gathering',
+      description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.'
     },
     {
       id: 3,
-      icon: <FileSearch size={24} />,
-      title: "Operational & Service Agreement Review",
-      description: "Structured plain-language review of operational agreements, equipment leases, and practice contracts. Note: G&J Solutions provides operational risk assessment and does not provide formal legal counsel.",
-      serviceParam: "Contract Review",
-      highlights: [
-        "Operational vendor contract risk summaries",
-        "Allied health room lease checklist review",
-        "Plain-language term comparison",
-        "Administrative compliance cross-checks"
-      ]
+      icon: <FileText size={28} style={{ color: '#2A7B7E' }} />,
+      title: 'Contract Review (Plain-Language Risk Read)',
+      description: 'A second pair of eyes to highlight ambiguous clauses and risks. I am not a lawyer and this is not legal advice, but a risk read I can stand behind.'
     }
   ];
 
   return (
-    <div className="services-container fade-in" style={{ maxWidth: '1100px', margin: '0 auto', paddingBottom: '3rem' }}>
+    <div className="services-container fade-in" style={{ maxWidth: '1100px', margin: '0 auto', paddingBottom: '4rem' }}>
+      {/* Page Header */}
       <div className="section-header text-center mb-4">
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-          <Layers size={16} /> Allied Health Support Solutions
-        </div>
-        <h1 className="section-title">Practice Support Services</h1>
-        <p className="section-subtitle" style={{ maxWidth: '700px', margin: '0 auto' }}>
-          Dedicated operational and administrative support tailored for independent Australian physiotherapy and allied health clinics.
+        <h1 
+          className="section-title" 
+          style={{ 
+            color: '#2A7B7E', 
+            fontSize: '2.5rem', 
+            fontWeight: 700, 
+            marginBottom: '0.75rem' 
+          }}
+        >
+          Our Services
+        </h1>
+        <p 
+          className="section-subtitle" 
+          style={{ 
+            maxWidth: '680px', 
+            margin: '0 auto 3rem auto', 
+            fontSize: '1.05rem', 
+            lineHeight: '1.6', 
+            color: '#4a5568' 
+          }}
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
       </div>
 
-      {/* Main Services Grid */}
-      <div className="grid services-grid mb-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))', gap: '2rem' }}>
-        {servicesList.map(service => (
+      {/* 3 Feature Cards Grid */}
+      <div 
+        className="grid services-features-grid mb-4" 
+        style={{ 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+          gap: '1.75rem' 
+        }}
+      >
+        {featureCards.map(card => (
           <div 
-            key={service.id} 
+            key={card.id} 
             className="card" 
             style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              justifyContent: 'space-between',
-              padding: '2.25rem',
-              border: '1px solid var(--color-border)',
-              position: 'relative',
-              overflow: 'hidden'
+              padding: '2.25rem 1.75rem', 
+              borderRadius: '12px', 
+              border: '1px solid #e2e8f0', 
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+              backgroundColor: '#ffffff',
+              display: 'flex',
+              flexDirection: 'column'
             }}
           >
-            <div>
-              <div style={{ 
-                width: '46px', 
-                height: '46px', 
-                borderRadius: '10px', 
-                backgroundColor: 'var(--color-primary-subtle)', 
-                color: 'var(--color-primary-dark)', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                marginBottom: '1.25rem',
-                border: '1px solid #ccfbf1'
-              }}>
-                {service.icon}
-              </div>
-              <h3 className="card-title" style={{ fontSize: '1.25rem', marginBottom: '0.75rem', color: 'var(--color-primary-dark)' }}>
-                {service.title}
-              </h3>
-              <p className="card-body" style={{ lineHeight: '1.6', color: 'var(--color-text-muted)', marginBottom: '1.5rem' }}>
-                {service.description}
-              </p>
-
-              <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '1rem', marginBottom: '1.5rem' }}>
-                <div style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-text-light)', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
-                  Key Capabilities:
-                </div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {service.highlights.map((h, i) => (
-                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.88rem', color: 'var(--color-text-muted)' }}>
-                      <Check size={16} style={{ color: 'var(--color-primary)', flexShrink: 0, marginTop: '3px' }} />
-                      <span>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div style={{ marginBottom: '1rem' }}>
+              {card.icon}
             </div>
-
-            <div style={{ paddingTop: '1rem', borderTop: '1px solid #f1f5f9' }}>
-              <Link 
-                to={`/contact?service=${encodeURIComponent(service.serviceParam)}`}
-                className="btn btn-primary"
-                style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%' }}
-              >
-                Inquire About Service <ArrowRight size={16} />
-              </Link>
-            </div>
+            <h3 
+              style={{ 
+                color: '#2A7B7E', 
+                fontSize: '1.25rem', 
+                fontWeight: 700, 
+                marginBottom: '0.75rem' 
+              }}
+            >
+              {card.title}
+            </h3>
+            <p 
+              style={{ 
+                color: '#4a5568', 
+                fontSize: '0.95rem', 
+                lineHeight: '1.65', 
+                margin: 0 
+              }}
+            >
+              {card.description}
+            </p>
           </div>
         ))}
       </div>
 
-      {/* Practice Engagement Models */}
-      <section className="tiered-packages-section section mt-4" style={{ borderTop: '1px solid var(--color-border)', paddingTop: '3.5rem' }}>
-        <div className="text-center mb-4">
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-            <Sparkles size={16} /> Flexible Clinic Partnership
+      {/* Service Packages (PoC Placeholder) */}
+      <div style={{ marginTop: '4.5rem', marginBottom: '3.5rem' }}>
+        <h2 
+          style={{ 
+            color: '#2A7B7E', 
+            fontSize: '1.85rem', 
+            fontWeight: 700, 
+            textAlign: 'center', 
+            marginBottom: '2rem' 
+          }}
+        >
+          Service Packages (PoC Placeholder)
+        </h2>
+
+        <div 
+          className="grid packages-grid" 
+          style={{ 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
+            gap: '1.75rem' 
+          }}
+        >
+          {/* Package 1 */}
+          <div 
+            style={{ 
+              border: '1.5px dashed #2A7B7E', 
+              borderRadius: '10px', 
+              padding: '2.5rem 1.75rem', 
+              textAlign: 'center', 
+              backgroundColor: '#ffffff' 
+            }}
+          >
+            <h3 
+              style={{ 
+                color: '#2A7B7E', 
+                fontSize: '1.15rem', 
+                fontWeight: 700, 
+                marginBottom: '0.5rem' 
+              }}
+            >
+              [ Frontdesk Work Tier ]
+            </h3>
+            <p 
+              style={{ 
+                color: '#64748b', 
+                fontSize: '0.925rem', 
+                margin: 0, 
+                lineHeight: '1.5' 
+              }}
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </p>
           </div>
-          <h2 className="section-title">Practice Engagement Models</h2>
-          <p className="section-subtitle" style={{ margin: '0 auto' }}>
-            Choose the operational coverage level that fits your clinic's clinician caseload and growth targets.
-          </p>
+
+          {/* Package 2 */}
+          <div 
+            style={{ 
+              border: '1.5px dashed #2A7B7E', 
+              borderRadius: '10px', 
+              padding: '2.5rem 1.75rem', 
+              textAlign: 'center', 
+              backgroundColor: '#ffffff' 
+            }}
+          >
+            <h3 
+              style={{ 
+                color: '#2A7B7E', 
+                fontSize: '1.15rem', 
+                fontWeight: 700, 
+                marginBottom: '0.5rem' 
+              }}
+            >
+              [ Report Prep & Data Gathering Tier ]
+            </h3>
+            <p 
+              style={{ 
+                color: '#64748b', 
+                fontSize: '0.925rem', 
+                margin: 0, 
+                lineHeight: '1.5' 
+              }}
+            >
+              Duis aute irure dolor in reprehenderit in voluptate velit esse.
+            </p>
+          </div>
         </div>
+      </div>
 
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.75rem' }}>
-          <div className="card" style={{ border: '1px solid var(--color-border)', textAlign: 'center', backgroundColor: '#ffffff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2.5rem' }}>
-            <div>
-              <div style={{ display: 'inline-block', padding: '0.3rem 0.8rem', backgroundColor: '#f1f5f9', borderRadius: '9999px', fontSize: '0.78rem', fontWeight: 600, color: '#475569', marginBottom: '1rem' }}>
-                Solo & Boutique Clinics
-              </div>
-              <h3 className="mb-2" style={{ color: 'var(--color-primary-dark)', fontSize: '1.4rem' }}>Frontdesk Operations</h3>
-              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.92rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
-                Comprehensive inbox triage, appointment scheduling, and Cliniko/Nookal diary optimization to ensure no patient call or inquiry goes unanswered.
-              </p>
-            </div>
-            <div>
-              <Link 
-                to={`/contact?service=${encodeURIComponent('Desk Work only')}`}
-                className="btn btn-primary"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', width: '100%', justifyContent: 'center' }}
-              >
-                Select Frontdesk Operations <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
+      {/* Out of Scope Services Card */}
+      <section 
+        style={{ 
+          marginTop: '3.5rem', 
+          backgroundColor: '#FFF5F5', 
+          border: '1px solid #FED7D7', 
+          borderRadius: '12px', 
+          padding: '3rem 2rem', 
+          textAlign: 'center',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
+        }}
+      >
+        <h2 
+          style={{ 
+            color: '#C53030', 
+            fontSize: '1.85rem', 
+            fontWeight: 700, 
+            marginBottom: '0.75rem' 
+          }}
+        >
+          Out of Scope Services
+        </h2>
+        
+        <p 
+          style={{ 
+            color: '#9B2C2C', 
+            fontSize: '0.975rem', 
+            lineHeight: '1.6', 
+            maxWidth: '680px', 
+            margin: '0 auto 1.5rem auto' 
+          }}
+        >
+          To ensure we provide the highest quality service in our areas of expertise, we explicitly <strong>do not handle</strong>:
+        </p>
 
-          <div className="card" style={{ border: '2px solid var(--color-primary)', textAlign: 'center', backgroundColor: 'var(--color-primary-subtle)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2.5rem', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'var(--color-primary-dark)', color: '#ffffff', padding: '0.2rem 1rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              Most Popular
-            </div>
-            <div>
-              <div style={{ display: 'inline-block', padding: '0.3rem 0.8rem', backgroundColor: '#ccfbf1', borderRadius: '9999px', fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-primary-dark)', marginBottom: '1rem' }}>
-                Multi-Practitioner Clinics
-              </div>
-              <h3 className="mb-2" style={{ color: 'var(--color-primary-dark)', fontSize: '1.4rem' }}>Full Practice Coordination</h3>
-              <p style={{ color: '#134e4a', fontSize: '0.92rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
-                Complete calendar oversight, patient intake management, GP referral tracking, recall workflows, cancellation backfilling, and administrative reporting.
-              </p>
-            </div>
-            <div>
-              <Link 
-                to={`/contact?service=${encodeURIComponent('Desk Work + Data gathering')}`}
-                className="btn btn-primary"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', width: '100%', justifyContent: 'center' }}
-              >
-                Select Full Practice Coordination <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Out of Scope / Regulatory Governance Section */}
-      <section className="section" style={{ marginTop: '3.5rem' }}>
-        <div style={{ 
-          padding: '2.5rem', 
-          border: '1px solid #fecaca', 
-          backgroundColor: '#fff5f5', 
-          borderRadius: '14px',
-          boxShadow: 'var(--shadow-sm)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-            <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '0.5rem', borderRadius: '8px' }}>
-              <ShieldAlert size={24} />
-            </div>
-            <h2 style={{ fontSize: '1.45rem', color: '#991b1b', margin: 0 }}>
-              Operational Scope & Clinical Governance Boundaries
-            </h2>
-          </div>
-          
-          <p style={{ color: '#7f1d1d', maxWidth: '750px', lineHeight: '1.6', fontSize: '0.95rem', marginBottom: '1.25rem' }}>
-            G&J Solutions provides administrative and operational support only. To protect our client clinics and maintain strict compliance with Australian healthcare and financial legislation, we explicitly <strong>do not handle</strong>:
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-            <div style={{ backgroundColor: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #fecaca' }}>
-              <strong style={{ color: '#991b1b', fontSize: '0.9rem', display: 'block', marginBottom: '0.25rem' }}>
-                • Clinical Diagnosis & Advice
-              </strong>
-              <span style={{ fontSize: '0.85rem', color: '#7f1d1d' }}>
-                No clinical diagnosis, medical triage, or alteration of treating clinician treatment/SOAP notes.
-              </span>
-            </div>
-
-            <div style={{ backgroundColor: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #fecaca' }}>
-              <strong style={{ color: '#991b1b', fontSize: '0.9rem', display: 'block', marginBottom: '0.25rem' }}>
-                • Tax & BAS Accounting
-              </strong>
-              <span style={{ fontSize: '0.85rem', color: '#7f1d1d' }}>
-                No tax accounting, BAS preparation, corporate tax filing, or formal financial advisory services.
-              </span>
-            </div>
-
-            <div style={{ backgroundColor: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #fecaca' }}>
-              <strong style={{ color: '#991b1b', fontSize: '0.9rem', display: 'block', marginBottom: '0.25rem' }}>
-                • Primary Banking Credentials
-              </strong>
-              <span style={{ fontSize: '0.85rem', color: '#7f1d1d' }}>
-                No access to or storage of client direct banking passwords or primary banking authority.
-              </span>
-            </div>
-
-            <div style={{ backgroundColor: '#ffffff', padding: '1rem', borderRadius: '8px', border: '1px solid #fecaca' }}>
-              <strong style={{ color: '#991b1b', fontSize: '0.9rem', display: 'block', marginBottom: '0.25rem' }}>
-                • Bank Reconciliation
-              </strong>
-              <span style={{ fontSize: '0.85rem', color: '#7f1d1d' }}>
-                No primary reconciliation of bank accounts or statutory merchant financial compliance.
-              </span>
-            </div>
-          </div>
+        <div style={{ display: 'inline-block', textAlign: 'left', margin: '0 auto' }}>
+          <ul 
+            style={{ 
+              listStyleType: 'disc', 
+              paddingLeft: '1.5rem', 
+              color: '#9B2C2C', 
+              fontSize: '0.95rem', 
+              lineHeight: '2.1' 
+            }}
+          >
+            <li>Accounting and tax filing</li>
+            <li>Accessing clients' bank details</li>
+            <li>Tracking receipts of payments from clients</li>
+          </ul>
         </div>
       </section>
     </div>

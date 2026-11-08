@@ -302,6 +302,22 @@ export const ContentManager: React.FC<ContentManagerProps> = ({
           </button>
         </div>
 
+        {/* Tab Navigation & Sanity Studio Launchpad */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1.5rem', background: '#F0FDFA', borderBottom: '1px solid #CCFBF1' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: '#0F766E' }}>
+            <span style={{ fontWeight: 600 }}>Sanity CMS (Modular Blocks):</span>
+            <span>Live visual editor & schema builder enabled</span>
+          </div>
+          <a
+            href="/studio"
+            target="_blank"
+            rel="noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', background: '#0D9488', color: '#FFFFFF', padding: '0.35rem 0.75rem', borderRadius: '0.375rem', textDecoration: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+          >
+            Launch Sanity Studio ↗
+          </a>
+        </div>
+
         {/* Tab Navigation */}
         <div className="admin-cms-tabs">
           <button

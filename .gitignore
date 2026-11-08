@@ -34,3 +34,5 @@ data/
 *.sqlite
 
 .vercel
+.firebase/
+New folder/
